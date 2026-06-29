@@ -1,7 +1,9 @@
 {
-  "name": "react-example",
+  "name": "prepverse",
+  "version": "0.1.0",
+  "description": "AI-powered open-source placement preparation platform.",
+  "author": "Pari Sangamnerkar",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
