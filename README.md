@@ -6,6 +6,22 @@ Built with a premium visual design and powered by Google Gemini, PrepVerse offer
 
 ---
 
+## 🌐 Live Demo
+
+**Try PrepVerse here:** https://prep-verse-green.vercel.app/
+
+---
+
+## 📸 Screenshots 
+
+### 🏠 Landing Page
+
+<p align="center">
+ <img src="assets/screenshots/landing-page.png" alt="PrepVerse Landing Page" width="100%"> 
+</p>
+
+---
+
 ## 🗺️ Open Source & Community Initiatives
 
 PrepVerse is fully optimized for collaborative open-source initiatives and community-led hackathons. We provide modular, highly structured guides and task planners to welcome first-time contributors:
