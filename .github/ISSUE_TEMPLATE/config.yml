@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Community
+    url: https://discord.gg/prepverse
+    about: Join our official Discord server to chat with other contributors in real time.
+  - name: GitHub Discussions
+    url: https://github.com/prepverse/prepverse/discussions
+    about: Ask questions, share ideas, and showcase your contributions.

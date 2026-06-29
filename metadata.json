@@ -1,0 +1,6 @@
+{
+  "name": "PrepVerse",
+  "description": "AI-powered open-source placement and internship preparation platform with structured DSA guides, ATS Resume Studio, simulated technical interview hub, aptitude practice, and custom roadmap planners.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
