@@ -159,7 +159,7 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
           </div>
 
           {/* Quick inline task creator */}
-          <form onSubmit={handleAddTask} className="flex gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-900">
+          <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-900">
             <input 
               type="text" 
               placeholder="e.g., Study sliding window pattern, review binary trees..."
@@ -349,7 +349,7 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
         
         <div className="grid gap-3">
           {recentSolutions.map((sol, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 bg-slate-950/60 rounded-2xl border border-slate-900">
+            <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-950/60 rounded-2xl border border-slate-900 gap-4 sm:gap-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
                   <CheckCircle className="w-4 h-4" />

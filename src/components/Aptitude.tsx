@@ -235,7 +235,7 @@ export default function Aptitude({ userStats, setUserStats }: AptitudeProps) {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-slate-400 font-medium">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-400 font-medium">
                     {q.options.map((opt, oIdx) => (
                       <div 
                         key={oIdx} 
