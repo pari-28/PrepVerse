@@ -151,5 +151,57 @@ export const companyPreps: CompanyPrepInfo[] = [
     faqs: [
       { q: 'Are Meta questions sourced from LeetCode patterns?', a: 'Many Meta questions assess variations of classic patterns. Speed of writing compilable code is highly valued.' }
     ]
+  },
+  {
+    id: 'amazon',
+    name: 'Amazon',
+    logo: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&h=100&fit=crop&q=80',
+    eligibility: [
+      'B.Tech / M.Tech / MCA in Computer Science, IT, or related fields.',
+      'Minimum CGPA: 7.0 or above (varies by campus).',
+      'Strong knowledge of Data Structures, Algorithms, Object-Oriented Design, and System Design.'
+    ],
+    hiringProcess: [
+      'Online Assessment (OA - Coding and Work Style Assessment)',
+      '1-2 Technical Phone Screens (DSA and Behavioral)',
+      '4-5 Virtual Onsite Rounds (System Design, DSA, and Bar Raiser)'
+    ],
+    oaPattern: {
+      duration: '90-120 Minutes',
+      sections: [
+        { name: 'Coding Assessment', questions: '2 Medium/Hard DSA', description: 'Focuses on arrays, strings, sliding window, graphs, and dynamic programming.' },
+        { name: 'Work Style Assessment', questions: 'Multiple Choice', description: 'Behavioral questions assessing alignment with Amazon Leadership Principles.' }
+      ]
+    },
+    rounds: [
+      {
+        name: 'Technical Round (Coding)',
+        focus: 'Data Structures, Algorithms, Problem Solving',
+        duration: '60 mins',
+        tips: [
+          'Be prepared to write code on a whiteboard or virtual document without syntax highlighting.',
+          'Discuss trade-offs in your design (time vs. space complexity).',
+          'Clarify requirements before jumping into the solution.'
+        ]
+      },
+      {
+        name: 'Bar Raiser Round',
+        focus: 'Amazon Leadership Principles, deep behavioral dive, and raising the hiring bar',
+        duration: '60 mins',
+        tips: [
+          'Frame your answers using the STAR method (Situation, Task, Action, Result).',
+          'Demonstrate Customer Obsession, Ownership, and Deliver Results.',
+          'The Bar Raiser is an objective third party; focus on data-driven answers and impact.'
+        ]
+      }
+    ],
+    resources: [
+      { title: 'Amazon Interview Prep Guide', link: 'https://www.amazon.jobs/en/landing_pages/interviewing-at-amazon', type: 'Doc' },
+      { title: 'Amazon Leadership Principles', link: 'https://www.amazon.jobs/content/en/our-workplace/leadership-principles', type: 'Doc' }
+    ],
+    faqs: [
+      { q: 'How important are the Amazon Leadership Principles?', a: 'They are critical. Almost every interviewer will evaluate you against at least two Leadership Principles. Prepare multiple distinct stories.' },
+      { q: 'What is the Bar Raiser?', a: 'A trained interviewer outside of the hiring team who ensures that every new hire raises the performance bar for the company.' }
+    ]
   }
 ];
