@@ -56,26 +56,69 @@ export default function ResumeStudio() {
   const [newSkill, setNewSkill] = useState('');
 
   // ATS Calculations
-  const [score, setScore] = useState(0);
-  const [checklist, setChecklist] = useState<{ label: string; passed: boolean }[]>([]);
+  const [atsFeedback, setAtsFeedback] = useState({
+    score: 0,
+    missingSections: [] as string[],
+    suggestions: [] as string[]
+  });
 
   useEffect(() => {
-    // Dynamically calculate ATS compliance score & build checklist
-    const checks = [
-      { label: 'Has GitHub profile linked', passed: !!resume.github },
-      { label: 'Has LinkedIn profile linked', passed: !!resume.linkedin },
-      { label: 'Has Phone and Email listed', passed: !!resume.phone && !!resume.email },
-      { label: 'At least 5 core technical skills', passed: resume.skills.length >= 5 },
-      { label: 'At least 1 detailed project', passed: resume.projects.length >= 1 },
-      { label: 'Professional work experience listed', passed: resume.experience.length >= 1 },
-      { label: 'Education details listed', passed: resume.education.length >= 1 },
-    ];
+    let computedScore = 0;
+    const missing: string[] = [];
+    const suggestions: string[] = [];
 
-    const passedCount = checks.filter(c => c.passed).length;
-    const computedScore = Math.round((passedCount / checks.length) * 100);
+    if (resume.email) computedScore += 5; else missing.push('Email Address');
+    if (resume.phone) computedScore += 5; else missing.push('Phone Number');
+    if (resume.linkedin) computedScore += 5; else missing.push('LinkedIn Profile');
+    if (resume.github) computedScore += 5; else missing.push('GitHub Profile');
 
-    setScore(computedScore);
-    setChecklist(checks);
+    if (resume.education.length > 0) {
+      computedScore += 20;
+      if (resume.education.some(e => !e.grade)) {
+        suggestions.push('Add GPA/Grade to your education to pass ATS screening for junior roles.');
+      }
+    } else {
+      missing.push('Education');
+    }
+
+    if (resume.experience.length > 0) {
+      computedScore += 15;
+      let descGood = true;
+      resume.experience.forEach(exp => {
+        if (!exp.description || exp.description.length < 50) descGood = false;
+      });
+      if (descGood) computedScore += 10;
+      else suggestions.push('Elaborate on your experience descriptions. ATS parses bullet points for keywords (aim for 50+ chars).');
+    } else {
+      missing.push('Work Experience');
+    }
+
+    if (resume.projects.length > 0) {
+      computedScore += 15;
+      let descGood = true;
+      resume.projects.forEach(proj => {
+        if (!proj.description || proj.description.length < 50) descGood = false;
+      });
+      if (descGood) computedScore += 5;
+      else suggestions.push('Add more detail to project descriptions to capture technical keywords.');
+    } else {
+      missing.push('Projects');
+    }
+
+    if (resume.skills.length >= 5) {
+      computedScore += 10;
+      if (resume.skills.length >= 10) computedScore += 5;
+      else suggestions.push('Adding more technical skills (10+) helps match more job descriptions.');
+    } else {
+      missing.push('Technical Skills');
+      suggestions.push('Add at least 5 core technical skills to pass ATS keyword filters.');
+    }
+
+    setAtsFeedback({
+      score: computedScore,
+      missingSections: missing,
+      suggestions
+    });
   }, [resume]);
 
   // Form management helpers
@@ -225,29 +268,52 @@ export default function ResumeStudio() {
         <div className="lg:col-span-7 space-y-6 print:hidden">
           
           {/* ATS Score & Checklist Panel */}
-          <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <div className="md:col-span-4 text-center border-b md:border-b-0 md:border-r border-slate-850 pb-4 md:pb-0">
+          <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            <div className="md:col-span-4 text-center border-b md:border-b-0 md:border-r border-slate-850 pb-4 md:pb-0 flex flex-col justify-center h-full">
               <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-wider">ATS Score</span>
-              <p className="text-5xl font-black text-indigo-400 tracking-tight my-1">{score}%</p>
+              <p className={`text-6xl font-black tracking-tight my-2 ${
+                atsFeedback.score >= 80 ? 'text-emerald-400' : atsFeedback.score >= 50 ? 'text-amber-400' : 'text-rose-400'
+              }`}>{atsFeedback.score}%</p>
               <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                <TrendingUp className={`w-3.5 h-3.5 ${atsFeedback.score >= 80 ? 'text-emerald-400' : 'text-amber-400'}`} />
                 <span>Target: 80%+ Score</span>
               </div>
             </div>
 
-            <div className="md:col-span-8 space-y-2">
-              <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Compliance Checklist</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                {checklist.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    {item.passed ? (
-                      <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                    ) : (
-                      <AlertCircle className="w-4 h-4 text-slate-600 shrink-0" />
-                    )}
-                    <span className={item.passed ? 'text-slate-300' : 'text-slate-500'}>{item.label}</span>
+            <div className="md:col-span-8 space-y-4">
+              <div>
+                <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <AlertCircle className="w-4 h-4 text-rose-400" /> Missing Sections
+                </h4>
+                {atsFeedback.missingSections.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {atsFeedback.missingSections.map((sec, idx) => (
+                      <span key={idx} className="text-[10px] bg-rose-950/40 text-rose-400 border border-rose-900/30 px-2.5 py-1 rounded-lg font-bold">
+                        {sec}
+                      </span>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <p className="text-xs text-emerald-400 font-bold flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> All core sections present.</p>
+                )}
+              </div>
+              
+              <div className="border-t border-slate-850 pt-3">
+                <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-indigo-400" /> Optimization Suggestions
+                </h4>
+                {atsFeedback.suggestions.length > 0 ? (
+                  <ul className="space-y-2">
+                    {atsFeedback.suggestions.map((sug, idx) => (
+                      <li key={idx} className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed">
+                        <ChevronDown className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5 -rotate-90" />
+                        {sug}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-emerald-400 font-bold flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Resume is highly optimized!</p>
+                )}
               </div>
             </div>
           </div>
