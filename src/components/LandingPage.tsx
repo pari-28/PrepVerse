@@ -19,7 +19,10 @@ import {
   FolderGit2, 
   Star,
   Award,
-  ChevronRight
+  ChevronRight,
+  Github,
+  Twitter,
+  Linkedin
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -291,25 +294,59 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-900 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-lg">
-              <Sparkles className="w-4 h-4 text-white" />
+      <footer className="border-t border-slate-900 bg-slate-950/80 pt-16 pb-8 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div className="md:col-span-2 space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-lg">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-black text-xl text-white tracking-tight">PrepVerse</span>
+                <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700/50">v1.0.0-OpenSource</span>
+              </div>
+              <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
+                The ultimate open-source engineering preparation workspace. Accelerate your career with curated DSA sheets, ATS resumes, and AI-simulated interviews.
+              </p>
+              <div className="flex items-center gap-4 pt-2">
+                <a href="https://github.com/Sravya0509/PrepVerse" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors border border-slate-800">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href="#" className="p-2 bg-slate-900 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors border border-slate-800">
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a href="#" className="p-2 bg-slate-900 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors border border-slate-800">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
             </div>
-            <span className="font-extrabold text-lg text-white">PrepVerse</span>
-            <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700/50">v1.0.0-OpenSource</span>
+
+            <div>
+              <h4 className="text-white font-bold mb-4">Project</h4>
+              <ul className="space-y-3 text-sm text-slate-400">
+                <li><button onClick={() => setCurrentTab('opensource')} className="hover:text-blue-400 transition-colors cursor-pointer">Documentation</button></li>
+                <li><button onClick={() => setCurrentTab('opensource')} className="hover:text-blue-400 transition-colors cursor-pointer">Code of Conduct</button></li>
+                <li><button onClick={() => setCurrentTab('opensource')} className="hover:text-blue-400 transition-colors cursor-pointer">License (Apache 2.0)</button></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-4">Community</h4>
+              <ul className="space-y-3 text-sm text-slate-400">
+                <li><a href="https://github.com/Sravya0509/PrepVerse" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors flex items-center gap-2"><Github className="w-4 h-4"/> GitHub Repository</a></li>
+                <li><button onClick={() => setCurrentTab('opensource')} className="hover:text-blue-400 transition-colors flex items-center gap-2"><FolderGit2 className="w-4 h-4"/> Contributing</button></li>
+                <li><button onClick={() => setCurrentTab('community')} className="hover:text-blue-400 transition-colors flex items-center gap-2"><Users className="w-4 h-4"/> Discord Community</button></li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
-            <button onClick={() => setCurrentTab('opensource')} className="hover:text-slate-300 cursor-pointer">Contributing</button>
-            <button onClick={() => setCurrentTab('opensource')} className="hover:text-slate-300 cursor-pointer">Code of Conduct</button>
-            <button onClick={() => setCurrentTab('opensource')} className="hover:text-slate-300 cursor-pointer">License</button>
+          <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© 2026 PrepVerse. Built for students worldwide.</p>
+            <div className="flex items-center gap-4">
+              <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-slate-300 transition-colors">Terms of Service</a>
+            </div>
           </div>
-
-          <p className="text-xs text-slate-600">
-            © 2026 PrepVerse. Built for students worldwide under Apache-2.0 License.
-          </p>
         </div>
       </footer>
 
