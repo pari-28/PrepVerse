@@ -1,9 +1,10 @@
 ---
 name: Documentation Update
 about: Suggest improvements or report errors in documentation
-title: '[DOC] '
+title: "[DOC] "
 labels: documentation
 assignees: ''
+
 ---
 
 ## 📝 Description of the Documentation Issue
