@@ -54,7 +54,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
   const currentItem = menuItems.find(item => item.id === currentTab);
 
   return (
-    <aside className="relative flex flex-col md:flex-row min-h-screen bg-slate-950 text-slate-100">
+    <aside className="relative flex flex-col md:flex-row min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden w-full">
       
       {/* MOBILE HEADER */}
       <header className="flex md:hidden items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 w-full z-50">
