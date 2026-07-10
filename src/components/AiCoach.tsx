@@ -23,7 +23,7 @@ interface Message {
   content: string;
 }
 
-export default function aiCoach({ userStats, setUserStats }: ActionDispatch) {
+export default function AiCoach() {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }
@@ -31,19 +31,17 @@ export default function aiCoach({ userStats, setUserStats }: ActionDispatch) {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
 
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
 
   if (loading) return <AICoachSkeleton />;
 
