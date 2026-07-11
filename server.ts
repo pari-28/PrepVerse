@@ -8,6 +8,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -41,8 +42,47 @@ function getGeminiClient(): GoogleGenAI {
 // API ROUTES
 // ==========================================
 
+// --- Security Middleware ---
+
+// Rate limiting for AI endpoints: 20 requests per 15 minutes per IP
+const aiRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Basic Prompt Injection Protection Middleware
+const promptInjectionCheck = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const payloadStr = JSON.stringify(req.body).toLowerCase();
+  const blocklist = [
+    'ignore previous instructions',
+    'ignore all previous',
+    'system instruction',
+    'system prompt',
+    'you are now',
+    'bypass',
+    'disregard',
+    'developer mode'
+  ];
+
+  for (const phrase of blocklist) {
+    if (payloadStr.includes(phrase)) {
+      return res.status(403).json({ error: 'Security Exception: Potentially malicious prompt detected.' });
+    }
+  }
+
+  // Length check (prevent extremely long prompts)
+  if (payloadStr.length > 5000) {
+    return res.status(413).json({ error: 'Payload Too Large: Prompt exceeds maximum allowed length.' });
+  }
+
+  next();
+};
+
 // Chat endpoint for general coach prompts
-app.post('/api/gemini/chat', async (req, res) => {
+app.post('/api/gemini/chat', aiRateLimiter, promptInjectionCheck, async (req, res) => {
   try {
     const { prompt, history } = req.body;
     if (!prompt) {
@@ -73,7 +113,7 @@ Help the student prepare for placements and internships. Keep answers highly pro
 });
 
 // Customized Weekly Study Plan Generator
-app.post('/api/gemini/study-plan', async (req, res) => {
+app.post('/api/gemini/study-plan', aiRateLimiter, promptInjectionCheck, async (req, res) => {
   try {
     const { targetCompany, dailyHours, currentYear, coreSkills, currentRating } = req.body;
     
@@ -110,7 +150,7 @@ Return the response in well-formatted Markdown with standard headers.`;
 });
 
 // Resume ATS Suggester / Bullet Point Optimizer
-app.post('/api/gemini/resume-review', async (req, res) => {
+app.post('/api/gemini/resume-review', aiRateLimiter, promptInjectionCheck, async (req, res) => {
   try {
     const { bulletPoint, role, techKeywords } = req.body;
     if (!bulletPoint) {
@@ -147,7 +187,7 @@ Provide your feedback in three concise blocks:
 });
 
 // Mock Interview Automated Evaluator
-app.post('/api/gemini/interview-grade', async (req, res) => {
+app.post('/api/gemini/interview-grade', aiRateLimiter, promptInjectionCheck, async (req, res) => {
   try {
     const { question, candidateAnswer, category } = req.body;
     if (!question || !candidateAnswer) {
