@@ -55,26 +55,32 @@ const aiRateLimiter = rateLimit({
 
 // Basic Prompt Injection Protection Middleware
 const promptInjectionCheck = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const payloadStr = JSON.stringify(req.body).toLowerCase();
   const blocklist = [
     'ignore previous instructions',
     'ignore all previous',
+    'print your system prompt',
     'system instruction',
-    'system prompt',
-    'you are now',
-    'bypass',
-    'disregard',
-    'developer mode'
+    'developer mode enabled'
   ];
 
-  for (const phrase of blocklist) {
-    if (payloadStr.includes(phrase)) {
-      return res.status(403).json({ error: 'Security Exception: Potentially malicious prompt detected.' });
+  // Helper to recursively check string values
+  const hasMaliciousContent = (obj: any): boolean => {
+    if (typeof obj === 'string') {
+      const lowerStr = obj.toLowerCase();
+      return blocklist.some(phrase => lowerStr.includes(phrase));
     }
+    if (typeof obj === 'object' && obj !== null) {
+      return Object.values(obj).some(val => hasMaliciousContent(val));
+    }
+    return false;
+  };
+
+  if (hasMaliciousContent(req.body)) {
+    return res.status(403).json({ error: 'Security Exception: Potentially malicious prompt detected.' });
   }
 
-  // Length check (prevent extremely long prompts)
-  if (payloadStr.length > 5000) {
+  // Length check (prevent extremely long payloads)
+  if (JSON.stringify(req.body).length > 10000) {
     return res.status(413).json({ error: 'Payload Too Large: Prompt exceeds maximum allowed length.' });
   }
 
