@@ -4,19 +4,20 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  Sparkles, 
-  ArrowRight, 
-  Code, 
-  FileCheck, 
-  MessageSquare, 
-  Users, 
-  Globe, 
-  Zap, 
-  CheckCircle, 
-  HelpCircle, 
-  ChevronDown, 
-  FolderGit2, 
+import BackToTop from "./BackToTop";
+import {
+  Sparkles,
+  ArrowRight,
+  Code,
+  FileCheck,
+  MessageSquare,
+  Users,
+  Globe,
+  Zap,
+  CheckCircle,
+  HelpCircle,
+  ChevronDown,
+  FolderGit2,
   Star,
   Award,
   ChevronRight
@@ -104,7 +105,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white overflow-x-hidden">
-      
+
       {/* BACKGROUND DECORATIVE EFFECTS */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none" />
@@ -129,15 +130,15 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-          <button 
+          <button
             onClick={onEnterApp}
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-extrabold px-8 py-4 rounded-xl shadow-xl shadow-indigo-900/40 transition-all transform hover:-translate-y-0.5 cursor-pointer text-base"
           >
             Enter Dashboard
             <ArrowRight className="w-4 h-4" />
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setCurrentTab('opensource')}
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-bold px-8 py-4 rounded-xl transition-all cursor-pointer text-base"
           >
@@ -172,8 +173,8 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="group p-8 rounded-3xl bg-slate-900/40 border border-slate-800/40 hover:border-slate-800 transition-all duration-300 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full blur-2xl group-hover:bg-indigo-600/10 transition-all duration-500" />
@@ -185,7 +186,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
                     {feat.badge}
                   </span>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
                   {feat.title}
                 </h3>
@@ -224,9 +225,9 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <img 
-                    src={test.avatar} 
-                    alt={test.name} 
+                  <img
+                    src={test.avatar}
+                    alt={test.name}
                     className="w-12 h-12 rounded-full border border-slate-800 object-cover"
                     referrerPolicy="no-referrer"
                   />
@@ -252,8 +253,8 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
           {faqs.map((faq, idx) => {
             const isOpen = activeFaq === idx;
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="rounded-2xl border border-slate-900 bg-slate-950/40 overflow-hidden transition-colors"
               >
                 <button
@@ -281,7 +282,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
         <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base mb-8">
           Gain access to curated sheets, simulated real-time interviews, ATS metrics, and career coach advice. Completely free and open-source.
         </p>
-        <button 
+        <button
           onClick={onEnterApp}
           className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-extrabold px-8 py-4 rounded-xl shadow-xl shadow-indigo-900/40 transition-all transform hover:-translate-y-0.5 cursor-pointer mx-auto text-base"
         >
@@ -312,7 +313,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
           </p>
         </div>
       </footer>
-
+      <BackToTop />
     </div>
   );
 }
