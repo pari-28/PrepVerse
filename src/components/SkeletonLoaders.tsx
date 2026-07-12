@@ -89,7 +89,7 @@ export function ResumeStudioSkeleton() {
       {/* Editor */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col gap-4">
         <Sk w="60%" h="14px" />
-        {[["35%", "36px"], ["25%", "36px"], ["40%", "72px"]].map(([lw, ih], i) => (
+        {([["35%", "36px"], ["25%", "36px"], ["40%", "72px"]] as [string, string][]).map(([lw, ih], i) => (
           <div key={i} className="flex flex-col gap-1">
             <Sk w={lw} h="10px" />
             <Sk w="100%" h={ih} rounded="rounded-lg" />

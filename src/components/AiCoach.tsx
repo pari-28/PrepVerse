@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState, useRef, useEffect, ActionDispatch } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { 
   Sparkles, 
   Send, 
