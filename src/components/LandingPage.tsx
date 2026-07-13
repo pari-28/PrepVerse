@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
+import BackToTop from './BackToTop';
 import React, { useState } from 'react';
 import {
   Sparkles,
@@ -350,7 +350,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
           </div>
         </div>
       </footer>
-
+     <BackToTop />
     </div>
   );
 }
