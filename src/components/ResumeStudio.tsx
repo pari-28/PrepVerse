@@ -23,8 +23,10 @@ import {
   Linkedin
 } from 'lucide-react';
 import { ResumeData } from '../types';
+import { ResumeStudioSkeleton } from "./SkeletonLoaders";
 
 export default function ResumeStudio() {
+  const [loading, setLoading] = useState(true);
   const [resume, setResume] = useState<ResumeData>({
     fullName: 'Jane Doe',
     email: 'jane.doe@example.com',
@@ -58,6 +60,10 @@ export default function ResumeStudio() {
   // ATS Calculations
   const [score, setScore] = useState(0);
   const [checklist, setChecklist] = useState<{ label: string; passed: boolean }[]>([]);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // Dynamically calculate ATS compliance score & build checklist
@@ -77,6 +83,8 @@ export default function ResumeStudio() {
     setScore(computedScore);
     setChecklist(checks);
   }, [resume]);
+
+   if (loading) return <ResumeStudioSkeleton />;
 
   // Form management helpers
   const handleAddEducation = () => {

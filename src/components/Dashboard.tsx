@@ -1,3 +1,4 @@
+import { DashboardSkeleton } from "./SkeletonLoaders";  
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -29,6 +30,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ userStats, setUserStats, setCurrentTab }: DashboardProps) {
+  const [loading, setLoading] = useState(true);
   const [plannerTasks, setPlannerTasks] = useState([
     { id: '1', title: 'Two Sum Map optimization', day: 'Monday', completed: true },
     { id: '2', title: 'Quantitative Speed quiz', day: 'Tuesday', completed: false },
@@ -36,9 +38,15 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
     { id: '4', title: 'Audit resume project bullet points', day: 'Thursday', completed: true },
     { id: '5', title: 'Mock OS virtual memory round', day: 'Friday', completed: false }
   ]);
-
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskDay, setNewTaskDay] = useState('Monday');
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <DashboardSkeleton />;
 
   const handleToggleTask = (id: string) => {
     const taskToToggle = plannerTasks.find(t => t.id === id);

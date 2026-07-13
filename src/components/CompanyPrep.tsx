@@ -20,9 +20,18 @@ import {
 } from 'lucide-react';
 import { companyPreps } from '../data/companyData';
 import { CompanyPrepInfo } from '../data/companyData';
+import { CompanyPrepSkeleton } from "./SkeletonLoaders";
 
 export default function CompanyPrep() {
+  const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<CompanyPrepInfo | null>(null);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <CompanyPrepSkeleton />;
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto h-[calc(100vh-100px)] overflow-y-auto">

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { 
   Sparkles, 
   Send, 
@@ -16,6 +16,7 @@ import {
   RefreshCw,
   AlertCircle
 } from 'lucide-react';
+import { AICoachSkeleton } from "./SkeletonLoaders";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -23,18 +24,26 @@ interface Message {
 }
 
 export default function AiCoach() {
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <AICoachSkeleton />;
 
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputText;
