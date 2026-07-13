@@ -4,15 +4,15 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  Sparkles, 
-  Printer, 
-  Plus, 
-  Trash2, 
-  CheckCircle, 
-  AlertCircle, 
-  TrendingUp, 
+import {
+  FileText,
+  Sparkles,
+  Printer,
+  Plus,
+  Trash2,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
   Award,
   ChevronDown,
   RefreshCw,
@@ -45,7 +45,7 @@ export default function ResumeStudio() {
   });
 
   const [activeTemplate, setActiveTemplate] = useState<'minimal' | 'executive'>('minimal');
-  
+
   // AI Bullet Point Optimizer states
   const [bulletToOptimize, setBulletToOptimize] = useState('Helped optimize load times for the company dashboard.');
   const [aiSuggestions, setAiSuggestions] = useState('');
@@ -223,7 +223,7 @@ export default function ResumeStudio() {
 
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-7xl mx-auto h-[calc(100vh-100px)] overflow-y-auto print:p-0 print:bg-white print:text-black">
-      
+
       {/* HEADER CONTROLS (Hidden when printing) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
         <div>
@@ -235,23 +235,21 @@ export default function ResumeStudio() {
           <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
             <button
               onClick={() => setActiveTemplate('minimal')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTemplate === 'minimal' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTemplate === 'minimal' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
             >
               Minimal SDE
             </button>
             <button
               onClick={() => setActiveTemplate('executive')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTemplate === 'executive' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTemplate === 'executive' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                }`}
             >
               Executive
             </button>
           </div>
 
-          <button 
+          <button
             onClick={handlePrint}
             className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-xs font-bold text-slate-200 border border-slate-800 px-4 py-2.5 rounded-xl transition-all cursor-pointer"
           >
@@ -263,17 +261,16 @@ export default function ResumeStudio() {
 
       {/* CORE WORKSPACE GRID (Hidden when printing except the actual preview container) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 print:block">
-        
+
         {/* LEFT COLUMN: EDITABLE CONSTRUCTOR & ATS RATING (7 COLS - Hidden when printing) */}
         <div className="lg:col-span-7 space-y-6 print:hidden">
-          
+
           {/* ATS Score & Checklist Panel */}
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
             <div className="md:col-span-4 text-center border-b md:border-b-0 md:border-r border-slate-850 pb-4 md:pb-0 flex flex-col justify-center h-full">
               <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-wider">ATS Score</span>
-              <p className={`text-6xl font-black tracking-tight my-2 ${
-                atsFeedback.score >= 80 ? 'text-emerald-400' : atsFeedback.score >= 50 ? 'text-amber-400' : 'text-rose-400'
-              }`}>{atsFeedback.score}%</p>
+              <p className={`text-6xl font-black tracking-tight my-2 ${atsFeedback.score >= 80 ? 'text-emerald-400' : atsFeedback.score >= 50 ? 'text-amber-400' : 'text-rose-400'
+                }`}>{atsFeedback.score}%</p>
               <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400">
                 <TrendingUp className={`w-3.5 h-3.5 ${atsFeedback.score >= 80 ? 'text-emerald-400' : 'text-amber-400'}`} />
                 <span>Target: 80%+ Score</span>
@@ -297,7 +294,7 @@ export default function ResumeStudio() {
                   <p className="text-xs text-emerald-400 font-bold flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> All core sections present.</p>
                 )}
               </div>
-              
+
               <div className="border-t border-slate-850 pt-3">
                 <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-indigo-400" /> Optimization Suggestions
@@ -324,8 +321,8 @@ export default function ResumeStudio() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Full Name</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={resume.fullName}
                   onChange={(e) => setResume({ ...resume, fullName: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -333,8 +330,8 @@ export default function ResumeStudio() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Email Address</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={resume.email}
                   onChange={(e) => setResume({ ...resume, email: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -342,8 +339,8 @@ export default function ResumeStudio() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Phone</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={resume.phone}
                   onChange={(e) => setResume({ ...resume, phone: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -351,8 +348,8 @@ export default function ResumeStudio() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Personal Portfolio URL</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={resume.website}
                   onChange={(e) => setResume({ ...resume, website: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -360,8 +357,8 @@ export default function ResumeStudio() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">GitHub profile URL</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={resume.github}
                   onChange={(e) => setResume({ ...resume, github: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -369,8 +366,8 @@ export default function ResumeStudio() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">LinkedIn profile URL</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={resume.linkedin}
                   onChange={(e) => setResume({ ...resume, linkedin: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
@@ -382,16 +379,16 @@ export default function ResumeStudio() {
           {/* Form: Skills Tags */}
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider border-b border-slate-850 pb-2">2. Skills Catalog</h3>
-            
+
             <form onSubmit={handleAddSkill} className="flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Add skill (e.g. Docker, GraphQL, Redis...)"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
                 className="flex-1 bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
               />
-              <button 
+              <button
                 type="submit"
                 className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 transition-colors cursor-pointer"
               >
@@ -401,12 +398,12 @@ export default function ResumeStudio() {
 
             <div className="flex flex-wrap gap-2 pt-2">
               {resume.skills.map(skill => (
-                <span 
-                  key={skill} 
+                <span
+                  key={skill}
                   className="flex items-center gap-1.5 text-xs bg-slate-950 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-800"
                 >
                   {skill}
-                  <button 
+                  <button
                     onClick={() => handleRemoveSkill(skill)}
                     className="text-slate-600 hover:text-rose-400 font-bold ml-1"
                   >
@@ -421,7 +418,7 @@ export default function ResumeStudio() {
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2">
               <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">3. Work Experience</h3>
-              <button 
+              <button
                 onClick={handleAddExperience}
                 className="flex items-center gap-1 bg-indigo-950/40 hover:bg-indigo-950/80 text-[10px] font-extrabold text-indigo-400 border border-indigo-850 px-2.5 py-1 rounded-lg transition-all"
               >
@@ -432,7 +429,7 @@ export default function ResumeStudio() {
 
             {resume.experience.map((exp, idx) => (
               <div key={idx} className="p-4 bg-slate-950/60 rounded-2xl border border-slate-900 space-y-3 relative group">
-                <button 
+                <button
                   onClick={() => handleRemoveExperience(idx)}
                   className="absolute top-4 right-4 text-slate-600 hover:text-rose-400 transition-colors"
                 >
@@ -442,8 +439,8 @@ export default function ResumeStudio() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Company</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={exp.company}
                       onChange={(e) => {
                         const updated = [...resume.experience];
@@ -455,8 +452,8 @@ export default function ResumeStudio() {
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Role / Title</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={exp.role}
                       onChange={(e) => {
                         const updated = [...resume.experience];
@@ -468,8 +465,8 @@ export default function ResumeStudio() {
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Period</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={exp.period}
                       onChange={(e) => {
                         const updated = [...resume.experience];
@@ -482,7 +479,7 @@ export default function ResumeStudio() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase">Description / Achievements</label>
-                  <textarea 
+                  <textarea
                     rows={2}
                     value={exp.description}
                     onChange={(e) => {
@@ -501,7 +498,7 @@ export default function ResumeStudio() {
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2">
               <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">4. Academic Projects</h3>
-              <button 
+              <button
                 onClick={handleAddProject}
                 className="flex items-center gap-1 bg-indigo-950/40 hover:bg-indigo-950/80 text-[10px] font-extrabold text-indigo-400 border border-indigo-850 px-2.5 py-1 rounded-lg transition-all"
               >
@@ -512,7 +509,7 @@ export default function ResumeStudio() {
 
             {resume.projects.map((proj, idx) => (
               <div key={idx} className="p-4 bg-slate-950/60 rounded-2xl border border-slate-900 space-y-3 relative group">
-                <button 
+                <button
                   onClick={() => handleRemoveProject(idx)}
                   className="absolute top-4 right-4 text-slate-600 hover:text-rose-400 transition-colors"
                 >
@@ -522,8 +519,8 @@ export default function ResumeStudio() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Project Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={proj.name}
                       onChange={(e) => {
                         const updated = [...resume.projects];
@@ -535,8 +532,8 @@ export default function ResumeStudio() {
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Tech Stack</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={proj.tech}
                       onChange={(e) => {
                         const updated = [...resume.projects];
@@ -548,8 +545,8 @@ export default function ResumeStudio() {
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Project Link</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={proj.link}
                       onChange={(e) => {
                         const updated = [...resume.projects];
@@ -562,7 +559,7 @@ export default function ResumeStudio() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase">Description</label>
-                  <textarea 
+                  <textarea
                     rows={2}
                     value={proj.description}
                     onChange={(e) => {
@@ -581,7 +578,7 @@ export default function ResumeStudio() {
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2">
               <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">5. Education</h3>
-              <button 
+              <button
                 onClick={handleAddEducation}
                 className="flex items-center gap-1 bg-indigo-950/40 hover:bg-indigo-950/80 text-[10px] font-extrabold text-indigo-400 border border-indigo-850 px-2.5 py-1 rounded-lg transition-all"
               >
@@ -592,7 +589,7 @@ export default function ResumeStudio() {
 
             {resume.education.map((edu, idx) => (
               <div key={idx} className="p-4 bg-slate-950/60 rounded-2xl border border-slate-900 space-y-3 relative group">
-                <button 
+                <button
                   onClick={() => handleRemoveEducation(idx)}
                   className="absolute top-4 right-4 text-slate-600 hover:text-rose-400 transition-colors"
                 >
@@ -602,8 +599,8 @@ export default function ResumeStudio() {
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Institution</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={edu.institution}
                       onChange={(e) => {
                         const updated = [...resume.education];
@@ -615,8 +612,8 @@ export default function ResumeStudio() {
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Degree</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={edu.degree}
                       onChange={(e) => {
                         const updated = [...resume.education];
@@ -628,8 +625,8 @@ export default function ResumeStudio() {
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">Period</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={edu.period}
                       onChange={(e) => {
                         const updated = [...resume.education];
@@ -641,8 +638,8 @@ export default function ResumeStudio() {
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase">GPA / Grade</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={edu.grade}
                       onChange={(e) => {
                         const updated = [...resume.education];
@@ -664,16 +661,16 @@ export default function ResumeStudio() {
               Gemini AI Bullet Optimizer
             </h3>
             <p className="text-xs text-slate-400">Paste a project or experience bullet. Our AI Coach will optimize it following the Google SDE XYZ metrics formula.</p>
-            
+
             <div className="space-y-3">
-              <textarea 
+              <textarea
                 rows={2}
                 placeholder="e.g. Added a cache which made queries faster."
                 value={bulletToOptimize}
                 onChange={(e) => setBulletToOptimize(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500"
               />
-              <button 
+              <button
                 onClick={handleOptimizeBullet}
                 disabled={isAiLoading || !bulletToOptimize.trim()}
                 className="flex items-center justify-center gap-1.5 w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold py-2.5 rounded-xl transition-colors cursor-pointer"
@@ -710,7 +707,7 @@ export default function ResumeStudio() {
 
         {/* RIGHT COLUMN: RENDERED CANVAS RESUME (5 COLS - Printable) */}
         <div className="lg:col-span-5 bg-white text-black p-8 rounded-3xl min-h-[840px] shadow-2xl relative border border-slate-200 print:border-none print:shadow-none print:rounded-none font-sans overflow-hidden">
-          
+
           <div className="space-y-6">
             {/* Header: Full Name & Social Icons */}
             <div className="text-center space-y-1.5 border-b border-slate-200 pb-4">
