@@ -2,19 +2,19 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
 import React, { useState } from 'react';
-import { 
-  MessageSquare, 
-  ThumbsUp, 
-  Share2, 
-  Award, 
-  Plus, 
-  Search, 
+import {
+  MessageSquare,
+  ThumbsUp,
+  Share2,
+  Award,
+  Plus,
+  Search,
   ChevronRight,
   TrendingUp,
   Tag,
-  UserCheck
+  UserCheck,
+  X
 } from 'lucide-react';
 import { ForumPost } from '../types';
 
@@ -49,7 +49,7 @@ export default function Community() {
   const [posts, setPosts] = useState<ForumPost[]>(initialForumPosts);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Custom post inputs
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -99,27 +99,27 @@ export default function Community() {
   };
 
   const filteredPosts = posts.filter(p => {
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.content.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.content.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto h-[calc(100vh-100px)] overflow-y-auto">
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* LEFT COLUMN: DISCUSSIONS & SHARING FEED (8 Cols) */}
         <div className="lg:col-span-8 space-y-6">
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Collaborative Forum Feed</h2>
               <p className="text-xs text-slate-500">Read interview archives, study guides, and salary packages posted by peers.</p>
             </div>
 
-            <button 
+            <button
               onClick={() => setShowForm(!showForm)}
               className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg shadow-blue-500/10 shrink-0 self-start sm:self-auto"
             >
@@ -135,8 +135,8 @@ export default function Community() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Article Title</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="e.g., My Experience Interning at Microsoft (Summer 2026)"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -145,7 +145,7 @@ export default function Community() {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Category Group</label>
-                  <select 
+                  <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
@@ -160,7 +160,7 @@ export default function Community() {
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Article Content</label>
-                <textarea 
+                <textarea
                   rows={4}
                   placeholder="Share preparation sources, timeline, online test codes, technical rounds, and offer status details..."
                   value={content}
@@ -171,8 +171,8 @@ export default function Community() {
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Tag Keywords (comma-separated)</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="e.g. Meta, Arrays, SDE, OA"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
@@ -181,14 +181,14 @@ export default function Community() {
               </div>
 
               <div className="flex justify-end gap-3 pt-2 text-xs">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setShowForm(false)}
                   className="text-slate-500 hover:text-white font-bold"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   type="submit"
                   className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer"
                 >
@@ -202,13 +202,23 @@ export default function Community() {
           <div className="flex flex-col sm:flex-row gap-4 bg-slate-900/30 p-4 rounded-2xl border border-slate-900">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Search articles, author names, or keywords..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-9 text-xs text-white placeholder:text-slate-650 focus:outline-none"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-900 text-xs font-bold">
@@ -216,9 +226,8 @@ export default function Community() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    selectedCategory === cat ? 'bg-slate-900 text-white shadow' : 'text-slate-500 hover:text-slate-300'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${selectedCategory === cat ? 'bg-slate-900 text-white shadow' : 'text-slate-500 hover:text-slate-300'
+                    }`}
                 >
                   {cat}
                 </button>
@@ -229,7 +238,7 @@ export default function Community() {
           {/* Posts List */}
           <div className="space-y-4">
             {filteredPosts.map((post) => (
-              <div 
+              <div
                 key={post.id}
                 className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4 hover:border-slate-800 transition-all"
               >
@@ -265,7 +274,7 @@ export default function Community() {
                 </div>
 
                 <div className="flex items-center gap-4 pt-3 border-t border-slate-900/50 text-xs">
-                  <button 
+                  <button
                     onClick={() => handleUpvote(post.id)}
                     className="flex items-center gap-1.5 text-slate-500 hover:text-indigo-400 font-bold transition-colors cursor-pointer"
                   >
@@ -287,7 +296,7 @@ export default function Community() {
 
         {/* RIGHT COLUMN: XP LEADERBOARD (4 Cols) */}
         <div className="lg:col-span-4 space-y-6">
-          
+
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
               <Award className="w-4.5 h-4.5 text-indigo-400" />
@@ -297,16 +306,15 @@ export default function Community() {
 
             <div className="space-y-2 pt-2">
               {leaderboard.map((user) => (
-                <div 
+                <div
                   key={user.rank}
                   className="flex items-center justify-between p-3.5 bg-slate-950/60 rounded-2xl border border-slate-900"
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`w-6 text-center text-xs font-black ${
-                      user.rank === 1 ? 'text-amber-400' :
+                    <span className={`w-6 text-center text-xs font-black ${user.rank === 1 ? 'text-amber-400' :
                       user.rank === 2 ? 'text-slate-300' :
-                      user.rank === 3 ? 'text-amber-600' : 'text-slate-650'
-                    }`}>
+                        user.rank === 3 ? 'text-amber-600' : 'text-slate-650'
+                      }`}>
                       #{user.rank}
                     </span>
                     <div>

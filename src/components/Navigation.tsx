@@ -54,11 +54,23 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
   const currentItem = menuItems.find(item => item.id === currentTab);
 
   return (
-    <aside className="relative flex flex-col md:flex-row min-h-screen bg-slate-950 text-slate-100">
+    <aside className="relative flex flex-col md:flex-row min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden w-full">
       
       {/* MOBILE HEADER */}
       <header className="flex md:hidden items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 w-full z-50">
-        <div className="flex items-center gap-2" onClick={() => setCurrentTab('landing')}>
+        <div
+  className="flex items-center gap-2"
+  onClick={() => setCurrentTab('landing')}
+  role="button"
+  tabIndex={0}
+  aria-label="Go to homepage"
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setCurrentTab('landing');
+    }
+  }}
+>
           <div className="p-2 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-lg">
             <Sparkles className="w-5 h-5 text-white animate-pulse" />
           </div>
@@ -73,18 +85,21 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
             <span>{userStats.streak}d</span>
           </div>
           <button 
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
-          >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+  onClick={() => setMobileOpen(!mobileOpen)}
+  className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
+  aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+  aria-expanded={mobileOpen}
+  aria-controls="mobile-nav-drawer"
+>
+  {mobileOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
+</button>
         </div>
       </header>
 
       {/* MOBILE DRAWER */}
       {mobileOpen && (
-        <div className="fixed inset-0 bg-slate-950/95 z-40 flex flex-col pt-24 px-6 md:hidden">
-          <nav className="flex flex-col gap-2">
+       <div id="mobile-nav-drawer" className="fixed inset-0 bg-slate-950/95 z-40 flex flex-col pt-24 px-6 md:hidden">
+        <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -130,8 +145,20 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
       )}
 
       {/* DESKTOP SIDEBAR */}
-      <nav className="hidden md:flex flex-col w-64 bg-slate-950 border-r border-slate-900 px-5 py-6 shrink-0 relative">
-        <div className="flex items-center gap-2.5 mb-8 px-2 cursor-pointer" onClick={() => setCurrentTab('landing')}>
+      <nav className="hidden md:flex flex-col w-64 bg-slate-950 border-r border-slate-900 px-5 py-6 shrink-0 relative" aria-label="Main navigation">
+       <div
+  className="flex items-center gap-2.5 mb-8 px-2 cursor-pointer"
+  onClick={() => setCurrentTab('landing')}
+  role="button"
+  tabIndex={0}
+  aria-label="Go to homepage"
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setCurrentTab('landing');
+    }
+  }}
+>
           <div className="p-2.5 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-900/30">
             <Sparkles className="w-6 h-6 text-white" />
           </div>

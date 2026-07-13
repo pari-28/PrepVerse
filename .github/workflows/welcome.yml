@@ -1,0 +1,29 @@
+name: Welcome
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/first-interaction@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          first-pr-message: |
+            🎉 Thanks for your first contribution!
+
+            Please ensure
+
+            ✔ Tests pass
+
+            ✔ Small focused PR
+
+            ✔ Follow coding style
+
+            Happy Coding 🚀
