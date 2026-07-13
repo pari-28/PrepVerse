@@ -7,14 +7,14 @@ const shimmerClass = `
 `;
 
 /* ── Base skeleton block ── */
-interface SkProps {
+interface SkeletonProps {
   w?: string;
   h?: string;
   rounded?: string;
   className?: string;
 }
 
-function Sk({ w = "100%", h = "12px", rounded = "rounded-md", className = "" }: SkProps) {
+function Sk({ w = "100%", h = "12px", rounded = "rounded-md", className = "" }: SkeletonProps) {
   return (
     <div
       aria-hidden="true"
@@ -24,7 +24,7 @@ function Sk({ w = "100%", h = "12px", rounded = "rounded-md", className = "" }: 
   );
 }
 
-function SkPill({ w, h, rounded: _rounded, className }: SkProps) {
+function SkPill({ w, h, className }: SkeletonProps) {
   return <Sk w={w} h={h} rounded="rounded-full" className={className} />;
 }
 
@@ -106,7 +106,9 @@ export function ResumeStudioSkeleton() {
           <Sk w="45%" h="12px" />
           <div className="flex flex-wrap gap-2">
             {tagWidths.map((w: number, i: number) => (
-              <SkPill key={i} w={`${w}px`} h="24px" />
+              <div key={i}>
+                <SkPill w={`${w}px`} h="24px" />
+              </div>
             ))}
           </div>
         </div>
@@ -122,7 +124,9 @@ export function ResumeStudioSkeleton() {
           <Sk w="40%" h="11px" className="mx-auto" />
           <div className="flex flex-col gap-1 mt-2">
             {previewLines.map((w: number, i: number) => (
-              <Sk key={i} w={`${w}%`} h="10px" />
+              <div key={i}>
+                <Sk w={`${w}%`} h="10px" />
+              </div>
             ))}
           </div>
           <Sk w="40%" h="13px" className="mt-2" />
@@ -135,7 +139,9 @@ export function ResumeStudioSkeleton() {
           <Sk w="35%" h="13px" className="mt-2" />
           <div className="flex gap-2 flex-wrap">
             {pillWidths.map((w: number, i: number) => (
-              <SkPill key={i} w={`${w}px`} h="20px" />
+              <div key={i}>
+                <SkPill w={`${w}px`} h="20px" />
+              </div>
             ))}
           </div>
         </div>
@@ -182,7 +188,9 @@ export function CompanyPrepSkeleton() {
           </div>
           <div className="border-t border-white/10 pt-3 flex gap-2">
             {item.tags.map((w: number, j: number) => (
-              <SkPill key={j} w={`${w}px`} h="22px" />
+              <div key={j}>
+                <SkPill w={`${w}px`} h="22px" />
+              </div>
             ))}
           </div>
         </div>
@@ -215,13 +223,17 @@ export function DSAModuleSkeleton() {
       <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-3">
         <Sk w="65%" h="13px" />
         {sidebarItems.map((i: number) => (
-          <SkPill key={i} w="100%" h="32px" />
+          <div key={i}>
+            <SkPill w="100%" h="32px" />
+          </div>
         ))}
         <div className="border-t border-white/10 my-1" />
         <Sk w="55%" h="11px" />
         <div className="flex flex-wrap gap-2">
           {tagWidths.map((w: number, i: number) => (
-            <SkPill key={i} w={`${w}px`} h="20px" />
+            <div key={i}>
+              <SkPill w={`${w}px`} h="20px" />
+            </div>
           ))}
         </div>
       </div>
@@ -234,7 +246,9 @@ export function DSAModuleSkeleton() {
           <Sk w="100%" h="100px" />
           <div className="flex flex-col gap-1">
             {descLines.map((w: number, i: number) => (
-              <Sk key={i} w={`${w}%`} h="9px" />
+              <div key={i}>
+                <Sk w={`${w}%`} h="9px" />
+              </div>
             ))}
           </div>
         </div>
@@ -291,7 +305,9 @@ export function AICoachSkeleton() {
                 }`}
               >
                 {bubble.lines.map((w: number, j: number) => (
-                  <Sk key={j} w={`${w}%`} h="9px" />
+                  <div key={j}>
+                    <Sk w={`${w}%`} h="9px" />
+                  </div>
                 ))}
               </div>
               {bubble.side === "right" && <SkCircle size="32px" />}
