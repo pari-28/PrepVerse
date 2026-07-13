@@ -4,3 +4,49 @@ html, body {
   overflow-x: hidden;
   width: 100%;
 }
+
+/* ATS Resume Studio — animations & scrollbar (appended)
+
+/* Custom thin scrollbar for the analyzer's scrollable areas */
+.pv-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.pv-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pv-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+.pv-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
+}
+
+/* Animated score gauge ring fill */
+@keyframes pv-gauge-fill {
+  from {
+    stroke-dashoffset: var(--pv-gauge-circumference);
+  }
+  to {
+    stroke-dashoffset: var(--pv-gauge-offset);
+  }
+}
+.pv-gauge-arc {
+  animation: pv-gauge-fill 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Fade-up transition for the findings panel when switching categories */
+@keyframes pv-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pv-fade-up {
+  animation: pv-fade-up 0.45s ease-out forwards;
+}
