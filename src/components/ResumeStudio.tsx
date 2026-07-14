@@ -65,17 +65,58 @@ export default function ResumeStudio() {
     return () => clearTimeout(timer);
   }, []);
 
+  const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const isValidPhone = (phone: string) =>
+  /^\+?[1-9]\d{7,14}$/.test(phone.replace(/[\s()-]/g, ""));
+
+const isValidGithub = (url: string) =>
+  /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9-]+\/?$/.test(url.trim());
+
+const isValidLinkedIn = (url: string) =>
+  /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[A-Za-z0-9-_%]+\/?$/.test(url.trim());
+
+
+const isValidPortfolio = (url: string) =>
+  /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/.test(
+    url.trim()
+  );
+
   useEffect(() => {
     // Dynamically calculate ATS compliance score & build checklist
-    const checks = [
-      { label: 'Has GitHub profile linked', passed: !!resume.github },
-      { label: 'Has LinkedIn profile linked', passed: !!resume.linkedin },
-      { label: 'Has Phone and Email listed', passed: !!resume.phone && !!resume.email },
-      { label: 'At least 5 core technical skills', passed: resume.skills.length >= 5 },
-      { label: 'At least 1 detailed project', passed: resume.projects.length >= 1 },
-      { label: 'Professional work experience listed', passed: resume.experience.length >= 1 },
-      { label: 'Education details listed', passed: resume.education.length >= 1 },
-    ];
+   const checks = [
+  {
+    label: 'Has GitHub profile linked',
+    passed: isValidGithub(resume.github),
+  },
+  {
+    label: 'Has LinkedIn profile linked',
+    passed: isValidLinkedIn(resume.linkedin),
+  },
+  {
+    label: 'Has Phone and Email listed',
+    passed:
+      isValidPhone(resume.phone) &&
+      isValidEmail(resume.email),
+  },
+  {
+    label: 'At least 5 core technical skills',
+    passed: resume.skills.length >= 5,
+  },
+  {
+    label: 'At least 1 detailed project',
+    passed: resume.projects.length >= 1,
+  },
+  {
+    label: 'Professional work experience listed',
+    passed: resume.experience.length >= 1,
+  },
+  {
+    label: 'Education details listed',
+    passed: resume.education.length >= 1,
+  },
+];
 
     const passedCount = checks.filter(c => c.passed).length;
     const computedScore = Math.round((passedCount / checks.length) * 100);
@@ -281,6 +322,11 @@ export default function ResumeStudio() {
                   onChange={(e) => setResume({ ...resume, email: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
+                {resume.email && !isValidEmail(resume.email) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Enter a valid email address.
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Phone</label>
@@ -290,6 +336,11 @@ export default function ResumeStudio() {
                   onChange={(e) => setResume({ ...resume, phone: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
+                {resume.phone && !isValidPhone(resume.phone) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Enter a valid phone number.
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">Personal Portfolio URL</label>
@@ -299,6 +350,11 @@ export default function ResumeStudio() {
                   onChange={(e) => setResume({ ...resume, website: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
+                {resume.website && !isValidPortfolio(resume.website) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Enter a valid portfolio URL.
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">GitHub profile URL</label>
@@ -308,6 +364,11 @@ export default function ResumeStudio() {
                   onChange={(e) => setResume({ ...resume, github: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
+                {resume.github && !isValidGithub(resume.github) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Enter a valid GitHub profile URL.
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-1">LinkedIn profile URL</label>
@@ -317,6 +378,11 @@ export default function ResumeStudio() {
                   onChange={(e) => setResume({ ...resume, linkedin: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
                 />
+                {resume.linkedin && !isValidLinkedIn(resume.linkedin) && (
+                  <p className="mt-1 text-xs text-red-500">
+                      Enter a valid LinkedIn profile URL.
+                  </p>
+                )}
               </div>
             </div>
           </div>
