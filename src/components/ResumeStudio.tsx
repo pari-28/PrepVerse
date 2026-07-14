@@ -20,7 +20,9 @@ import {
   Phone,
   Globe,
   Github,
-  Linkedin
+  Linkedin,
+  BarChart3,
+  AlertTriangle
 } from 'lucide-react';
 import { ResumeData } from '../types';
 import { ResumeStudioSkeleton } from "./SkeletonLoaders";
@@ -60,6 +62,15 @@ export default function ResumeStudio() {
   // ATS Calculations
   const [score, setScore] = useState(0);
   const [checklist, setChecklist] = useState<{ label: string; passed: boolean }[]>([]);
+
+  // Resume completion tracking
+  const [completionSections, setCompletionSections] = useState<{
+    key: string;
+    label: string;
+    filled: boolean;
+  }[]>([]);
+  const [completionPercent, setCompletionPercent] = useState(0);
+
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -82,6 +93,44 @@ export default function ResumeStudio() {
 
     setScore(computedScore);
     setChecklist(checks);
+
+    // Resume completion progress tracking
+    const sections = [
+      {
+        key: 'personal',
+        label: 'Contact & Personal Info',
+        filled: !!(resume.fullName && resume.email),
+      },
+      {
+        key: 'socials',
+        label: 'Social Profiles (GitHub / LinkedIn)',
+        filled: !!(resume.github || resume.linkedin),
+      },
+      {
+        key: 'skills',
+        label: 'Technical Skills',
+        filled: resume.skills.length >= 3,
+      },
+      {
+        key: 'experience',
+        label: 'Work Experience',
+        filled: resume.experience.length >= 1 && resume.experience.some(e => e.company && e.role && e.description),
+      },
+      {
+        key: 'projects',
+        label: 'Projects',
+        filled: resume.projects.length >= 1 && resume.projects.some(p => p.name && p.tech && p.description),
+      },
+      {
+        key: 'education',
+        label: 'Education',
+        filled: resume.education.length >= 1 && resume.education.some(e => e.institution && e.degree),
+      },
+    ];
+
+    setCompletionSections(sections);
+    const filledCount = sections.filter(s => s.filled).length;
+    setCompletionPercent(Math.round((filledCount / sections.length) * 100));
   }, [resume]);
 
    if (loading) return <ResumeStudioSkeleton />;
@@ -232,6 +281,69 @@ export default function ResumeStudio() {
         {/* LEFT COLUMN: EDITABLE CONSTRUCTOR & ATS RATING (7 COLS - Hidden when printing) */}
         <div className="lg:col-span-7 space-y-6 print:hidden">
           
+          {/* Resume Completion Progress Bar */}
+          <div className="p-5 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-emerald-400" />
+                <h4 className="text-xs font-extrabold text-slate-300 uppercase tracking-widest">Resume Completion</h4>
+              </div>
+              <span className={`text-lg font-black tracking-tight ${
+                completionPercent === 100 ? 'text-emerald-400' : completionPercent >= 50 ? 'text-amber-400' : 'text-rose-400'
+              }`}>
+                {completionPercent}%
+              </span>
+            </div>
+
+            {/* Progress bar track */}
+            <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div
+                className={`h-full rounded-full transition-all duration-700 ease-out ${
+                  completionPercent === 100
+                    ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
+                    : completionPercent >= 50
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-400'
+                    : 'bg-gradient-to-r from-rose-500 to-rose-400'
+                }`}
+                style={{ width: `${completionPercent}%` }}
+              />
+            </div>
+
+            {/* Section breakdown */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {completionSections.map(section => (
+                <div
+                  key={section.key}
+                  className={`flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg border transition-colors ${
+                    section.filled
+                      ? 'bg-emerald-950/30 border-emerald-900/30 text-emerald-400'
+                      : 'bg-slate-950/50 border-slate-800 text-slate-500'
+                  }`}
+                >
+                  {section.filled ? (
+                    <CheckCircle className="w-3 h-3 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-3 h-3 shrink-0" />
+                  )}
+                  <span className="truncate">{section.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Missing sections nudge */}
+            {completionPercent < 100 && (
+              <p className="text-[10px] text-slate-500 italic">
+                Complete all sections for a stronger resume. Missing: {completionSections.filter(s => !s.filled).map(s => s.label).join(', ')}
+              </p>
+            )}
+            {completionPercent === 100 && (
+              <p className="text-[10px] text-emerald-400/80 italic flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" />
+                All resume sections are complete — great work!
+              </p>
+            )}
+          </div>
+
           {/* ATS Score & Checklist Panel */}
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             <div className="md:col-span-4 text-center border-b md:border-b-0 md:border-r border-slate-850 pb-4 md:pb-0">
