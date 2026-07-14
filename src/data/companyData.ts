@@ -21,51 +21,106 @@ export const companyPreps: CompanyPrepInfo[] = [
     eligibility: [
       'B.Tech/B.E/M.Tech/M.S in Computer Science or related quantitative field.',
       'Minimum CGPA: 7.5 or above (usually no active backlogs).',
-      'Strong proficiency in data structures, algorithms, and system design.'
+      'Strong proficiency in data structures, algorithms, and system design.',
+      'Prior internship, open-source, or competitive programming experience is a plus.',
+      'Familiarity with at least one mainstream language: C++, Java, Python, or Go.'
     ],
     hiringProcess: [
-      'Online Assessment / Coding Challenge (1-2 Coding questions)',
-      'Technical Screening Round (45 minutes, algorithmic problem solving)',
-      '3-4 Virtual Onsite Technical Rounds (Algorithmic problem solving + Googlyness/Behavioral)'
+      'Resume Screening & Recruiter Call (30 minutes, background & role fit discussion)',
+      'Online Assessment / Coding Challenge (1-2 Coding questions on Google platform)',
+      'Technical Phone Screen (45 minutes, live coding with Google engineer)',
+      'Virtual Onsite Round 1: Coding & Data Structures (45 minutes)',
+      'Virtual Onsite Round 2: Coding & Algorithms (45 minutes)',
+      'Virtual Onsite Round 3: System Design or Design-Related Coding (45 minutes)',
+      'Virtual Onsite Round 4: Googlyness & Behavioral (45 minutes)',
+      'Hiring Committee Review & Team Matching'
     ],
     oaPattern: {
       duration: '90 Minutes',
       sections: [
-        { name: 'Coding Question 1', questions: '1 Medium/Hard DSA', description: 'Focuses on graphs, trees, dynamic programming or complex arrays.' },
-        { name: 'Coding Question 2', questions: '1 Medium/Hard DSA', description: 'Advanced graph traversal, math models, or optimized prefix trees.' }
+        { name: 'Coding Question 1', questions: '1 Medium/Hard DSA', description: 'Focuses on graphs, trees, dynamic programming, or complex arrays. You must pass all hidden test cases.' },
+        { name: 'Coding Question 2', questions: '1 Medium/Hard DSA', description: 'Advanced graph traversal, math models, greedy algorithms, or optimized prefix trees. Hidden test cases are strict.' },
+        { name: 'Follow-up Optimization', questions: '1-2 Follow-ups', description: 'Interviewers may ask you to extend your solution to handle constraints, reduce time/space complexity, or handle edge cases.' }
       ]
     },
     rounds: [
       {
-        name: 'Technical Round 1-3 (Coding)',
-        focus: 'Data Structures, Graph Traversals, Dynamic Programming, Time/Space optimization',
-        duration: '45 mins each',
+        name: 'Technical Phone Screen',
+        focus: 'Live coding on Google Docs, algorithmic problem solving, communication',
+        duration: '45 mins',
         tips: [
+          'You will code in a plain Google Doc — no IDE, no autocomplete, no syntax highlighting.',
+          'Practice coding on a blank document beforehand to get comfortable.',
+          'Verbally explain your approach before writing any code.',
+          'Start with brute force, state complexity, then optimize step by step.',
+          'Test with edge cases: empty input, single element, duplicates, large N.'
+        ]
+      },
+      {
+        name: 'Onsite Round 1: Coding & Data Structures',
+        focus: 'Arrays, hash maps, trees, linked lists, stacks, queues',
+        duration: '45 mins',
+        tips: [
+          'Choose the right data structure first — explain why before coding.',
           'Think out loud. Google interviewers evaluate your thought process heavily.',
-          'Start with a brute force answer, state its time/space complexity, and explain how you will optimize it.',
           'Write clean, modular code with descriptive variable names.',
-          'Dry run your solution with a few edge cases (e.g. empty lists, negative inputs).'
+          'Dry run your solution with 2-3 examples including edge cases.'
+        ]
+      },
+      {
+        name: 'Onsite Round 2: Coding & Algorithms',
+        focus: 'Graph traversals, dynamic programming, greedy, binary search, recursion',
+        duration: '45 mins',
+        tips: [
+          'Start with a brute force answer, state its time/space complexity, and explain how you will optimize it.',
+          'For DP problems: identify subproblems, write recurrence, then code bottom-up or top-down.',
+          'For graph problems: clarify directed/undirected, weighted/unweighted, cyclic/acyclic.',
+          'Optimize incrementally — show you can improve from O(n²) to O(n log n) or O(n).'
+        ]
+      },
+      {
+        name: 'Onsite Round 3: System Design / Design-Related Coding',
+        focus: 'Scalable system design, API design, data modeling, or object-oriented design',
+        duration: '45 mins',
+        tips: [
+          'Clarify requirements and scope before designing. Ask about scale (QPS, storage, latency).',
+          'Start with a high-level architecture, then drill into specific components.',
+          'Discuss trade-offs: SQL vs NoSQL, caching strategies, load balancing, sharding.',
+          'For new grads: focus may shift to object-oriented design (design a parking lot, elevator system).',
+          'Draw diagrams to communicate your design visually.'
         ]
       },
       {
         name: 'Googlyness & Leadership',
-        focus: 'Cultural fit, team collaboration, conflict resolution, ambiguous situations',
+        focus: 'Cultural fit, team collaboration, conflict resolution, ambiguous situations, growth mindset',
         duration: '45 mins',
         tips: [
           'Use the STAR method (Situation, Task, Action, Result) to format your answers.',
           'Focus on collaborative success rather than solo accomplishments.',
-          'Show ownership, resilience, and an open-minded attitude to diverse ideas.'
+          'Show ownership, resilience, and an open-minded attitude to diverse ideas.',
+          'Prepare stories about: handling disagreement, dealing with failure, mentoring others, pushing back on a decision.',
+          'Google values "comfort with ambiguity" — share examples where you navigated unclear requirements.'
         ]
       }
     ],
     resources: [
       { title: 'Google Tech Dev Guide', link: 'https://techdevguide.withgoogle.com/', type: 'Doc' },
       { title: 'How to Solve Algorithmic Problems at Google', link: 'https://www.youtube.com/watch?v=XKu_SEDAykw', type: 'Video' },
-      { title: 'Google Interview Warmup', link: 'https://grow.google/certificates/interview-warmup/', type: 'Doc' }
+      { title: 'Google Interview Warmup', link: 'https://grow.google/certificates/interview-warmup/', type: 'Doc' },
+      { title: 'LeetCode Google Tag — Top Interview Questions', link: 'https://leetcode.com/company/google/', type: 'Doc' },
+      { title: 'System Design Primer (GitHub)', link: 'https://github.com/donnemartin/system-design-primer', type: 'Doc' },
+      { title: 'Google Career — How We Hire', link: 'https://careers.google.com/how-we-hire/', type: 'Doc' },
+      { title: 'NeetCode 150 — Google-Focused DSA Roadmap', link: 'https://neetcode.io/', type: 'Doc' },
+      { title: 'Google Behavioral Interview Guide (YouTube)', link: 'https://www.youtube.com/watch?v=GoR8KqIeJXs', type: 'Video' }
     ],
     faqs: [
-      { q: 'Is a resume matching score of 80%+ mandatory for Google?', a: 'While a high ATS score helps you clear initial resume screens, Google recruiters look for exceptional projects, competitive programming profiles, and strong GPA credentials.' },
-      { q: 'Does Google allow pseudocode in coding interviews?', a: 'No, you are expected to write syntactically correct, compiling, and well-designed code in your language of choice (C++, Java, Python, or Go).' }
+      { q: 'Is a resume matching score of 80%+ mandatory for Google?', a: 'While a high ATS score helps you clear initial resume screens, Google recruiters look for exceptional projects, competitive programming profiles, and strong GPA credentials. Focus on impactful projects and quantifiable achievements.' },
+      { q: 'Does Google allow pseudocode in coding interviews?', a: 'No, you are expected to write syntactically correct, compiling, and well-designed code in your language of choice (C++, Java, Python, or Go). Practice coding on a plain Google Doc without IDE features.' },
+      { q: 'How long does the Google interview process take?', a: 'Typically 4-8 weeks from recruiter call to offer. The phone screen is usually scheduled within 1-2 weeks, and the virtual onsite within another 1-2 weeks. The hiring committee review can take 1-3 weeks.' },
+      { q: 'Can I apply to multiple Google roles simultaneously?', a: 'Yes, but your application is shared across recruiters. It is best to apply for the role that best matches your skills. If you are considered for multiple roles, your recruiter will coordinate.' },
+      { q: 'Is the system design round required for new grads (SWE-1)?', a: 'It varies. Some new grad loops replace system design with object-oriented design or an additional coding round. Ask your recruiter for specifics on your interview loop.' },
+      { q: 'What happens in the hiring committee review?', a: 'Your interview feedback is reviewed by a committee of senior engineers who were not involved in your interviews. They evaluate the aggregate signal across all rounds and make a hire/no-hire recommendation.' },
+      { q: 'Should I use C++ or Python for Google coding interviews?', a: 'Choose the language you are most comfortable with. Python is faster to write but has slower runtime; C++ is more verbose but offers better performance. Google does not penalize language choice — clarity and correctness matter most.' }
     ]
   },
   {
