@@ -171,13 +171,14 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
 
         {/* METRICS ROW */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto border border-slate-900 bg-slate-950/60 backdrop-blur-md p-8 rounded-3xl relative">
-          {stats.map((stat, idx) => (
+          {stats.map((stat,idx) => (
             <StatCard
-              key={idx}
+              key={stat.label} 
               value={stat.value}
               label={stat.label}
               suffix={stat.suffix}
-              decimals={stat.decimals}
+              decimals={stat.decimals !== undefined ? stat.decimals : 0}
+              delay={idx * 150}
             />
           ))}
         </div>
