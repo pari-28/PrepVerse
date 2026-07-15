@@ -4,6 +4,8 @@
  */
 import BackToTop from './BackToTop';
 import React, { useState } from 'react';
+import { useCountUp } from '../hooks/useCountUp';
+import StatCard from "./StatCard";
 import {
   Sparkles,
   ArrowRight,
@@ -34,10 +36,27 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const stats = [
-    { value: '45,000+', label: 'DSA Problems Solved' },
-    { value: '12,200+', label: 'ATS Resumes Scanned' },
-    { value: '98.4%', label: 'Mock Success Rate' },
-    { value: '180+', label: 'Top Recruiters Listed' }
+    {
+      value: 45000,
+      suffix: "+",
+      label: "DSA Problems Solved",
+    },
+    {
+      value: 12200,
+      suffix: "+",
+      label: "ATS Resumes Scanned",
+    },
+    {
+      value: 98.4,
+      suffix: "%",
+      decimals: 1,
+      label: "Mock Success Rate",
+    },
+    {
+      value: 180,
+      suffix: "+",
+      label: "Top Recruiters Listed",
+    },
   ];
 
   const features = [
@@ -152,11 +171,15 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
 
         {/* METRICS ROW */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto border border-slate-900 bg-slate-950/60 backdrop-blur-md p-8 rounded-3xl relative">
-          {stats.map((stat, idx) => (
-            <div key={idx} className="text-center">
-              <p className="text-3xl md:text-4xl font-black text-white tracking-tight mb-1">{stat.value}</p>
-              <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{stat.label}</p>
-            </div>
+          {stats.map((stat,idx) => (
+            <StatCard
+              key={stat.label} 
+              value={stat.value}
+              label={stat.label}
+              suffix={stat.suffix}
+              decimals={stat.decimals !== undefined ? stat.decimals : 0}
+              delay={idx * 150}
+            />
           ))}
         </div>
       </section>
@@ -350,7 +373,7 @@ export default function LandingPage({ onEnterApp, setCurrentTab }: LandingPagePr
           </div>
         </div>
       </footer>
-     <BackToTop />
+      <BackToTop />
     </div>
   );
 }
