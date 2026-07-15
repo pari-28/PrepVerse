@@ -1,6 +1,7 @@
 import { useCountUp } from "../hooks/useCountUp";
 
 type StatCardProps = {
+  key: string;
   value: number;
   label: string;
   suffix?: string;
