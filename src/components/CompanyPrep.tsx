@@ -26,6 +26,33 @@ export default function CompanyPrep() {
   const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<CompanyPrepInfo | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Track array of bookmarked company IDs
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
+    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    return saved.map((c: any) => c.id);
+  });
+
+  // Function to save or remove bookmarks
+  const toggleBookmark = (company: CompanyPrepInfo) => {
+    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    const exists = saved.some((c: any) => c.id === company.id);
+    let updated;
+    
+    if (exists) {
+      updated = saved.filter((c: any) => c.id !== company.id);
+      setBookmarkedIds(prev => prev.filter(id => id !== company.id));
+    } else {
+      updated = [...saved, { 
+        id: company.id, 
+        name: company.name, 
+        logo: company.logo, 
+        roundsCount: company.rounds.length 
+      }];
+      setBookmarkedIds(prev => [...prev, company.id]);
+    }
+    localStorage.setItem('bookmarkedCompanies', JSON.stringify(updated));
+  };
 
   const filteredCompanies = companyPreps.filter((company) =>
   company.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -80,6 +107,16 @@ export default function CompanyPrep() {
                       <p className="text-xs text-slate-500">Product Engineering</p>
                     </div>
                   </div>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleBookmark(company);
+                    }}
+                    className="p-2 rounded-xl bg-slate-950/60 border border-slate-900 text-slate-400 hover:text-amber-400 transition-colors cursor-pointer z-10"
+                    title="Bookmark company"
+                  >
+                    <Bookmark className={`w-4 h-4 ${bookmarkedIds.includes(company.id) ? 'fill-amber-400 text-amber-400' : ''}`} />
+                  </button>
 
                   <div className="space-y-2">
                     <p className="text-xs text-slate-400 font-medium">OA Pattern: <span className="font-bold text-slate-300">{company.oaPattern.duration}</span></p>
@@ -146,10 +183,17 @@ export default function CompanyPrep() {
                   className="w-16 h-16 rounded-2xl border border-slate-800 object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <div className="text-center sm:text-left space-y-1">
+                <div className="text-center sm:text-left space-y-1 flex-1">
                   <h3 className="text-2xl font-black text-white tracking-tight">{selectedCompany.name} SDE Placement Guide</h3>
                   <p className="text-xs text-slate-400">Curated from verified candidate interview loop logs and recruitment timelines.</p>
                 </div>
+                <button 
+                  onClick={() => toggleBookmark(selectedCompany)}
+                  className="p-3 rounded-2xl bg-slate-950 border border-slate-900 text-slate-400 hover:text-amber-400 transition-colors cursor-pointer sm:ml-auto"
+                  title="Bookmark company"
+                >
+                  <Bookmark className={`w-5 h-5 ${bookmarkedIds.includes(selectedCompany.id) ? 'fill-amber-400 text-amber-400' : ''}`} />
+                </button>
               </div>
 
               {/* Recruitment Pipeline Process */}
