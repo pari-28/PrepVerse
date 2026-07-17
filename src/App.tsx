@@ -22,8 +22,17 @@ import OpenSourceMeta from './components/OpenSourceMeta';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('landing');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-
+// Bulletproof state initialization that reads from localStorage immediately
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      
+      // Fallback to system preferences if no choice is stored yet
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'dark';
+  });
   const [userStats, setUserStats] = useState<UserStats>({
     name: 'Jane Doe',
     xp: 1250,
@@ -109,11 +118,10 @@ export default function App() {
     );
   }
 
-  return (
-    <div className={theme === 'dark' ? 'dark bg-slate-950 text-white' : 'bg-slate-950 text-white'}>
+return (
+    <div className={theme === 'dark' ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}>
       <Navigation 
-        currentTab={currentTab} 
-        setCurrentTab={setCurrentTab} 
+        currentTab={currentTab}        setCurrentTab={setCurrentTab} 
         userStats={userStats} 
         theme={theme} 
         setTheme={setTheme}
