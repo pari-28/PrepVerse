@@ -4,3 +4,56 @@ html, body {
   overflow-x: hidden;
   width: 100%;
 }
+
+/* Custom Cursor Styles */
+@media (pointer: fine) {
+  /* Hide default cursor globally on desktop devices */
+  body, a, button, [role="button"] {
+    cursor: none !important;
+  }
+
+  /* The main inner dot cursor */
+  .custom-cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary, #6366f1); /* Falls back to indigo if variable isn't set */
+    border-radius: 50%;
+    pointer-events: none; /* Prevents the cursor from blocking clicks */
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+  }
+
+  /* The smooth trailing outer ring */
+  .custom-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-primary, #6366f1);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    /* Transition handles the delay for a smooth trailing follow effect */
+    transition: transform 0.08s ease-out, width 0.2s, height 0.2s, background-color 0.2s;
+  }
+
+  /* Hover state: when hovering over clickable items */
+  .custom-cursor-hover .custom-cursor-dot {
+    width: 4px;
+    height: 4px;
+    background-color: #ffffff;
+  }
+
+  .custom-cursor-hover .custom-cursor-ring {
+    width: 44px;
+    height: 44px;
+    background-color: rgba(99, 102, 241, 0.15); /* Slight tint match */
+    border-color: var(--color-primary, #6366f1);
+  }
+}
