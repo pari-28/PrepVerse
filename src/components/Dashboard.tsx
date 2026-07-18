@@ -30,18 +30,27 @@ interface DashboardProps {
   setCurrentTab: (tab: string) => void;
 }
 
+// Define a type-safe structure for the bookmark object
+interface BookmarkedCompany {
+  id: string;
+  name: string;
+  logo: string;
+  roundsCount: number;
+}
+
 export default function Dashboard({ userStats, setUserStats, setCurrentTab }: DashboardProps) {
   const [loading, setLoading] = useState(true);
-  const [bookmarkedCompanies, setBookmarkedCompanies] = useState<any[]>([]);
+  const [bookmarkedCompanies, setBookmarkedCompanies] = useState<BookmarkedCompany[]>([]);
 
+  // This hook runs every time the Dashboard mounts or displays, keeping session states perfectly synchronized
   React.useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
     setBookmarkedCompanies(saved);
   }, []);
 
   const removeBookmarkFromDashboard = (id: string) => {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
-    const updated = saved.filter((c: any) => c.id !== id);
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    const updated = saved.filter((c: BookmarkedCompany) => c.id !== id);
     localStorage.setItem('bookmarkedCompanies', JSON.stringify(updated));
     setBookmarkedCompanies(updated);
   };
@@ -374,7 +383,7 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
           <p className="text-xs text-slate-500 py-2">No companies bookmarked yet. Explore Placement Guides to save your favorites!</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bookmarkedCompanies.map((company) => (
+            {bookmarkedCompanies.map((company: BookmarkedCompany) => (
               <div key={company.id} className="p-4 bg-slate-950/60 rounded-2xl border border-slate-900 flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <img 
