@@ -22,25 +22,33 @@ import { companyPreps } from '../data/companyData';
 import { CompanyPrepInfo } from '../data/companyData';
 import { CompanyPrepSkeleton } from "./SkeletonLoaders";
 
+// Define a type-safe structure for the bookmark object
+interface BookmarkedCompany {
+  id: string;
+  name: string;
+  logo: string;
+  roundsCount: number;
+}
+
 export default function CompanyPrep() {
   const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<CompanyPrepInfo | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Track array of bookmarked company IDs
+  // Track array of bookmarked company IDs with type safety
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
-    return saved.map((c: any) => c.id);
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    return saved.map((c: BookmarkedCompany) => c.id);
   });
 
   // Function to save or remove bookmarks
   const toggleBookmark = (company: CompanyPrepInfo) => {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
-    const exists = saved.some((c: any) => c.id === company.id);
-    let updated;
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    const exists = saved.some((c: BookmarkedCompany) => c.id === company.id);
+    let updated: BookmarkedCompany[];
     
     if (exists) {
-      updated = saved.filter((c: any) => c.id !== company.id);
+      updated = saved.filter((c: BookmarkedCompany) => c.id !== company.id);
       setBookmarkedIds(prev => prev.filter(id => id !== company.id));
     } else {
       updated = [...saved, { 
