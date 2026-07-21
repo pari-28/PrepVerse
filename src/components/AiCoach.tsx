@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { 
   Sparkles, 
   Send, 
@@ -16,6 +16,7 @@ import {
   RefreshCw,
   AlertCircle
 } from 'lucide-react';
+import { AICoachSkeleton } from "./SkeletonLoaders";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -25,7 +26,7 @@ interface Message {
 const STORAGE_KEY = 'prepverse_ai_coach_history';
 
 export default function AiCoach() {
-<<<<<<< Updated upstream
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }
   ]);
@@ -42,19 +43,16 @@ export default function AiCoach() {
   }
   return [{ role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }];
 });
->>>>>>> Stashed changes
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-<<<<<<< Updated upstream
-=======
   useEffect(() => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
   }, [messages]);
@@ -66,7 +64,6 @@ export default function AiCoach() {
 
   if (loading) return <AICoachSkeleton />;
 
->>>>>>> Stashed changes
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputText;
     if (!textToSend.trim()) return;

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { dsaProblems } from '../data/dsaData';
 import { DsaProblem, UserStats } from '../types';
+import { DSAModuleSkeleton } from "./SkeletonLoaders";
 
 interface DsaModuleProps {
   userStats: UserStats;
@@ -30,6 +31,7 @@ interface DsaModuleProps {
 }
 
 export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
+  const [loading, setLoading] = useState(true);
   const [selectedProblem, setSelectedProblem] = useState<DsaProblem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
@@ -51,7 +53,14 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
     'two-sum': 'Remember to use a Map to keep track of indices. Complexity is O(n).'
   });
   const [tempNotes, setTempNotes] = useState('');
+  
+    React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
+  if (loading) return <DSAModuleSkeleton />;
+  
   const handleSelectProblem = (prob: DsaProblem) => {
     setSelectedProblem(prob);
     setCode(prob.codeTemplate);
