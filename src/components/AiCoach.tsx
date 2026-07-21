@@ -22,10 +22,27 @@ interface Message {
   content: string;
 }
 
+const STORAGE_KEY = 'prepverse_ai_coach_history';
+
 export default function AiCoach() {
+<<<<<<< Updated upstream
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }
   ]);
+=======
+  const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState<Message[]>(() => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [{ role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }];
+    }
+  }
+  return [{ role: 'assistant', content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?' }];
+});
+>>>>>>> Stashed changes
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,6 +53,20 @@ export default function AiCoach() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
+<<<<<<< Updated upstream
+=======
+  useEffect(() => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <AICoachSkeleton />;
+
+>>>>>>> Stashed changes
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputText;
     if (!textToSend.trim()) return;
@@ -74,6 +105,14 @@ export default function AiCoach() {
     }
   };
 
+  const clearHistory = () => {
+  const welcomeMessage: Message = {
+    role: 'assistant',
+    content: 'Hello! I am your PrepVerse SDE Placement Coach. I can help you build custom placement roadmaps, review your projects, drill system design diagrams, or walk through tough algorithms. What is on your mind today?'
+  };
+  setMessages([welcomeMessage]);
+  localStorage.removeItem(STORAGE_KEY);
+  };
   const prompts = [
     { label: 'Generate placement roadmap', text: 'Generate a step-by-step 3-month preparation roadmap for an SDE placement at Google. Break it down into weekly milestones spanning DSA, System Design, and CS Fundamentals.' },
     { label: 'Drill System Design concepts', text: 'Explain how an LRU Cache is implemented. Include details on the double-linked-list & hash-map layout, and time/space complexities.' },
@@ -84,13 +123,21 @@ export default function AiCoach() {
     <div className="p-6 md:p-8 space-y-6 max-w-5xl mx-auto h-[calc(100vh-100px)] flex flex-col justify-between">
       
       {/* Title */}
-      <div className="shrink-0">
-        <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
-          PrepVerse Placement AI Coach
-        </h2>
-        <p className="text-xs text-slate-500">Ask career questions, design architectures, or outline mock algorithms with server-side Gemini intelligence.</p>
-      </div>
+      <div className="shrink-0 flex items-center justify-between">
+      <div>
+      <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+        <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
+        PrepVerse Placement AI Coach
+      </h2>
+      <p className="text-xs text-slate-500">Ask career questions, design architectures, or outline mock algorithms with server-side Gemini intelligence.</p>
+    </div>
+    <button
+    onClick={clearHistory}
+    className="text-xs font-semibold text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-900/40 rounded-xl px-3 py-2 transition-colors shrink-0"
+  >
+    Clear History
+  </button>
+</div>
 
       {/* Chat Messages Panel */}
       <div className="flex-1 min-h-[300px] border border-slate-900 bg-slate-950 rounded-3xl p-6 overflow-y-auto space-y-6">
