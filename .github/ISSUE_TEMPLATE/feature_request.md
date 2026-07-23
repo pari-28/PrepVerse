@@ -1,19 +1,34 @@
 ---
 name: Feature Request
 about: Suggest an idea or enhancement for PrepVerse
-title: '[FEAT] '
-labels: enhancement, discussion
+title: "[FEAT] <Feature Name>"
+labels: enhancement
 assignees: ''
+
 ---
 
-## 🚀 Is your feature request related to a problem?
-A clear and concise description of what the problem is. Ex. I'm frustrated when [...]
+## 📌 Overview
+Briefly describe the feature or enhancement.
 
-## 💡 Describe the proposed solution
-A clear and concise description of what you want to happen.
+## 🎯 Problem Statement
+What problem does this feature solve?
 
-## 🎨 Describe alternatives you have considered
-A clear and concise description of any alternative solutions or features you've considered.
+## 💡 Proposed Solution
+Describe your proposed implementation.
 
-## 🛠️ Additional Context
-Add any other context or screenshots about the feature request here.
+## 🛠️ Implementation Details
+- Which files/components will be modified?
+- Will you reuse existing components?
+- Will any new dependencies be added?
+
+## 📋 Acceptance Criteria
+- [ ] Follows the existing project structure
+- [ ] Responsive and mobile-friendly
+- [ ] Reuses existing UI/components where possible
+- [ ] No unrelated changes included
+
+## 🖼️ Screenshots / Mockups (Optional)
+Add screenshots or design references if applicable.
+
+## 📝 Additional Notes
+Any extra context or references.

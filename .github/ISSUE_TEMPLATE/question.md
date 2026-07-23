@@ -1,9 +1,10 @@
 ---
 name: Question / Help
 about: Ask a question about PrepVerse's setup, configuration, or roadmap
-title: '[Q] '
+title: "[Q] "
 labels: help wanted, question
 assignees: ''
+
 ---
 
 ## ❓ Your Question

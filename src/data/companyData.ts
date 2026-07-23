@@ -151,5 +151,175 @@ export const companyPreps: CompanyPrepInfo[] = [
     faqs: [
       { q: 'Are Meta questions sourced from LeetCode patterns?', a: 'Many Meta questions assess variations of classic patterns. Speed of writing compilable code is highly valued.' }
     ]
-  }
+  },
+  {
+    id: 'amazon',
+    name: 'Amazon',
+    logo: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&h=100&fit=crop&q=80',
+    eligibility: [
+      'B.Tech / M.Tech / MCA in Computer Science, IT, or related fields.',
+      'Minimum CGPA: 7.0 or above (varies by campus).',
+      'Strong knowledge of Data Structures, Algorithms, Object-Oriented Design, and System Design.'
+    ],
+    hiringProcess: [
+      'Online Assessment (OA - Coding and Work Style Assessment)',
+      '1-2 Technical Phone Screens (DSA and Behavioral)',
+      '4-5 Virtual Onsite Rounds (System Design, DSA, and Bar Raiser)'
+    ],
+    oaPattern: {
+      duration: '90-120 Minutes',
+      sections: [
+        { name: 'Coding Assessment', questions: '2 Medium/Hard DSA', description: 'Focuses on arrays, strings, sliding window, graphs, and dynamic programming.' },
+        { name: 'Work Style Assessment', questions: 'Multiple Choice', description: 'Behavioral questions assessing alignment with Amazon Leadership Principles.' }
+      ]
+    },
+    rounds: [
+      {
+        name: 'Technical Round (Coding)',
+        focus: 'Data Structures, Algorithms, Problem Solving',
+        duration: '60 mins',
+        tips: [
+          'Be prepared to write code on a whiteboard or virtual document without syntax highlighting.',
+          'Discuss trade-offs in your design (time vs. space complexity).',
+          'Clarify requirements before jumping into the solution.'
+        ]
+      },
+      {
+        name: 'Bar Raiser Round',
+        focus: 'Amazon Leadership Principles, deep behavioral dive, and raising the hiring bar',
+        duration: '60 mins',
+        tips: [
+          'Frame your answers using the STAR method (Situation, Task, Action, Result).',
+          'Demonstrate Customer Obsession, Ownership, and Deliver Results.',
+          'The Bar Raiser is an objective third party; focus on data-driven answers and impact.'
+        ]
+      }
+    ],
+    resources: [
+      { title: 'Amazon Interview Prep Guide', link: 'https://www.amazon.jobs/en/landing_pages/interviewing-at-amazon', type: 'Doc' },
+      { title: 'Amazon Leadership Principles', link: 'https://www.amazon.jobs/content/en/our-workplace/leadership-principles', type: 'Doc' }
+    ],
+    faqs: [
+      { q: 'How important are the Amazon Leadership Principles?', a: 'They are critical. Almost every interviewer will evaluate you against at least two Leadership Principles. Prepare multiple distinct stories.' },
+      { q: 'What is the Bar Raiser?', a: 'A trained interviewer outside of the hiring team who ensures that every new hire raises the performance bar for the company.' }
+    ]
+  },{
+
+    id: "adobe",
+  name: "Adobe",
+  logo: "https://images.unsplash.com/photo-1649734926700-8dfb770ffaee?q=80&w=2062&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+
+  eligibility: [
+    "B.Tech / M.Tech / MCA in Computer Science, IT, Electronics, or related fields.",
+    "Typically 7.0+ CGPA (varies by campus).",
+    "Strong understanding of Data Structures, Algorithms, OOP, DBMS, Operating Systems, and Computer Networks.",
+    "Good communication and problem-solving skills."
+  ],
+
+  hiringProcess: [
+    "Online Assessment",
+    "Technical Interview Round 1",
+    "Technical Interview Round 2",
+    "Hiring Manager / Technical Discussion",
+    "HR Discussion"
+  ],
+
+  oaPattern: {
+    duration: "90 Minutes",
+    sections: [
+      {
+        name: "Coding",
+        questions: "2 DSA Problems",
+        description:
+          "Usually one medium and one medium-hard problem covering arrays, strings, trees, graphs, hashing, or dynamic programming."
+      },
+      {
+        name: "MCQs",
+        questions: "15-20 Questions",
+        description:
+          "Questions from OOP, DBMS, Operating Systems, Computer Networks, and basic aptitude."
+      }
+    ]
+  },
+
+  rounds: [
+    {
+      name: "Technical Interview 1",
+      focus: "Coding, Data Structures, Algorithms",
+      duration: "60 mins",
+      tips: [
+        "Explain your approach before writing code.",
+        "Discuss time and space complexity.",
+        "Practice trees, graphs, recursion, and dynamic programming.",
+        "Consider edge cases before finalizing your solution."
+      ]
+    },
+    {
+      name: "Technical Interview 2",
+      focus: "Low-Level Design, CS Fundamentals, Coding",
+      duration: "60 mins",
+      tips: [
+        "Revise OOP concepts and design principles.",
+        "Be comfortable with DBMS normalization and SQL.",
+        "Review Operating Systems and Computer Networks basics.",
+        "Expect follow-up optimizations after solving coding questions."
+      ]
+    },
+    {
+      name: "Hiring Manager Round",
+      focus: "Project Discussion and Problem Solving",
+      duration: "45-60 mins",
+      tips: [
+        "Know every project on your resume thoroughly.",
+        "Explain design decisions with trade-offs.",
+        "Be prepared to discuss scalability and performance.",
+        "Communicate clearly while solving open-ended problems."
+      ]
+    },
+    {
+      name: "HR Discussion",
+      focus: "Behavioral and Culture Fit",
+      duration: "30 mins",
+      tips: [
+        "Be honest about your career goals.",
+        "Prepare examples demonstrating teamwork.",
+        "Show enthusiasm for Adobe's products and innovation.",
+        "Maintain confidence and professionalism."
+      ]
+    }
+  ],
+
+  resources: [
+    {
+      title: "Adobe Careers",
+      link: "https://careers.adobe.com",
+      type: "Article"
+    },
+    {
+      title: "Adobe Interview Experience - GeeksforGeeks",
+      link: "https://www.geeksforgeeks.org/adobe-interview-experience/",
+      type: "Article"
+    },
+    {
+      title: "Adobe Placement Preparation",
+      link: "https://www.interviewbit.com/adobe-interview-questions/",
+      type: "Article"
+    }
+  ],
+
+  faqs: [
+    {
+      q: "Does Adobe ask System Design for freshers?",
+      a: "For SDE-1 campus hiring, System Design is generally limited. The focus is primarily on coding, OOP, and CS fundamentals."
+    },
+    {
+      q: "Which DSA topics are most important?",
+      a: "Arrays, Strings, Trees, Graphs, Dynamic Programming, Hashing, and Binary Search are among the most frequently tested topics."
+    },
+    {
+      q: "Are projects discussed during interviews?",
+      a: "Yes. Interviewers often spend considerable time discussing your projects, implementation choices, and technical decisions."
+    }
+  ]
+  }  
 ];

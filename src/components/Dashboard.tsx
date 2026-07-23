@@ -1,3 +1,4 @@
+import { DashboardSkeleton } from "./SkeletonLoaders";  
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -29,6 +30,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ userStats, setUserStats, setCurrentTab }: DashboardProps) {
+  const [loading, setLoading] = useState(true);
   const [plannerTasks, setPlannerTasks] = useState([
     { id: '1', title: 'Two Sum Map optimization', day: 'Monday', completed: true },
     { id: '2', title: 'Quantitative Speed quiz', day: 'Tuesday', completed: false },
@@ -36,9 +38,15 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
     { id: '4', title: 'Audit resume project bullet points', day: 'Thursday', completed: true },
     { id: '5', title: 'Mock OS virtual memory round', day: 'Friday', completed: false }
   ]);
-
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskDay, setNewTaskDay] = useState('Monday');
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <DashboardSkeleton />;
 
   const handleToggleTask = (id: string) => {
     const taskToToggle = plannerTasks.find(t => t.id === id);
@@ -159,7 +167,7 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
           </div>
 
           {/* Quick inline task creator */}
-          <form onSubmit={handleAddTask} className="flex gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-900">
+          <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-900">
             <input 
               type="text" 
               placeholder="e.g., Study sliding window pattern, review binary trees..."
@@ -349,7 +357,7 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
         
         <div className="grid gap-3">
           {recentSolutions.map((sol, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 bg-slate-950/60 rounded-2xl border border-slate-900">
+            <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-950/60 rounded-2xl border border-slate-900 gap-4 sm:gap-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
                   <CheckCircle className="w-4 h-4" />

@@ -1,0 +1,14 @@
+# Default reviewer
+* @pari-28
+
+# Frontend
+src/components/ @pari-28
+
+# Backend
+server.ts @pari-28
+
+# Data
+src/data/ @pari-28
+
+# GitHub workflows
+.github/ @pari-28

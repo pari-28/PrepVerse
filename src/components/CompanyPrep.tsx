@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Building2, 
   ChevronRight, 
@@ -20,9 +20,23 @@ import {
 } from 'lucide-react';
 import { companyPreps } from '../data/companyData';
 import { CompanyPrepInfo } from '../data/companyData';
+import { CompanyPrepSkeleton } from "./SkeletonLoaders";
 
 export default function CompanyPrep() {
+  const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<CompanyPrepInfo | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCompanies = companyPreps.filter((company) =>
+  company.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <CompanyPrepSkeleton />;
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto h-[calc(100vh-100px)] overflow-y-auto">
@@ -36,10 +50,18 @@ export default function CompanyPrep() {
             <h2 className="text-xl font-bold text-white tracking-tight">Company Placement Guides</h2>
             <p className="text-xs text-slate-500">Deep dives into recruitment pipelines, online assessment criteria, and specific interview loops.</p>
           </div>
-
+          <div>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by company name..."
+              className="w-full rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+             />
+           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {companyPreps.map((company) => (
-              <div 
+            {filteredCompanies.map((company) => (
+              <div
                 key={company.id}
                 className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 hover:border-slate-800 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
               >
@@ -80,6 +102,17 @@ export default function CompanyPrep() {
                 </div>
               </div>
             ))}
+            {filteredCompanies.length === 0 && (
+              <div className="col-span-full rounded-3xl border border-slate-800 bg-slate-900/40 p-10 text-center">
+              <Building2 className="mx-auto mb-3 h-10 w-10 text-slate-500" />
+                <h3 className="text-lg font-semibold text-white">
+                  No matching companies found
+                </h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Try searching with a different company name.
+                </p>
+              </div>
+             )}
           </div>
         </div>
       ) : (

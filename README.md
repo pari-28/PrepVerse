@@ -20,6 +20,56 @@ Built with a premium visual design and powered by Google Gemini, PrepVerse offer
  <img src="assets/screenshots/landing-page.png" alt="PrepVerse Landing Page" width="100%"> 
 </p>
 
+
+### 💻 DSA Sandbox & Tracker
+
+<p align="center">
+ <img src="assets/screenshots/dsa-sandbox.png" alt="DSA Sandbox & Tracker Page" width="80%"> 
+</p>
+
+
+### 📄 ATS Resume Studio
+
+<p align="center">
+ <img src="assets/screenshots/resume-studio.png" alt="ATS Resume Studio Page" width="80%"> 
+</p>
+
+
+### 🗣️ Interview Hub
+
+<p align="center">
+ <img src="assets/screenshots/interview-hub.png" alt="Interview Hub Page" width="80%"> 
+</p>
+
+
+### 🏢 Company-Specific Prep Guides
+
+<p align="center">
+ <img src="assets/screenshots/company-prep-guide.png" alt="Company-Specific Prep Guides Page" width="80%"> 
+</p>
+
+
+### ⏱️ Timed Aptitude Quizzes
+
+<p align="center">
+ <img src="assets/screenshots/aptitude-tests.png" alt="Aptitude Quizzes Page" width="80%"> 
+</p>
+
+
+### 🤖 Interactive AI Coach
+
+<p align="center">
+ <img src="assets/screenshots/ai-coach.png" alt="AI Coach Page" width="80%"> 
+</p>
+
+
+### 👥 Community & Leader board
+
+<p align="center">
+ <img src="assets/screenshots/community.png" alt="Community & Leader board Page" width="80%"> 
+</p>
+
+
 ---
 
 ## 🗺️ Open Source & Community Initiatives
@@ -133,3 +183,6 @@ We welcome contributions from developers worldwide! Please read our [CONTRIBUTIN
 ## License
 
 This project is licensed under the Apache 2.0 License. See the [LICENSE](./LICENSE) file for more details.
+
+<!-- Test PR workflow -->
+<!-- Auto merge workflow test -->

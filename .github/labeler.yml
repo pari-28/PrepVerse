@@ -1,0 +1,34 @@
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: "src/components/**"
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: "server.ts"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "README.md"
+          - "CONTRIBUTING.md"
+          - "docs/**"
+
+data:
+  - changed-files:
+      - any-glob-to-any-file: "src/data/**"
+
+github:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.css"
+          - "**/*.scss"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.test.*"
+          - "**/*.spec.*"
