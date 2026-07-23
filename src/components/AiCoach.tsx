@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { 
   Sparkles, 
   Send, 
@@ -17,6 +17,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+import { AICoachSkeleton } from "./SkeletonLoaders";
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -25,6 +27,7 @@ interface Message {
 const STORAGE_KEY = 'prepverse_ai_coach_history';
 
 export default function AiCoach() {
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
