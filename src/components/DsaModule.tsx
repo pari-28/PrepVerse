@@ -3,23 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { 
-  Code, 
   Search, 
   ChevronRight, 
-  Star, 
-  CheckCircle, 
+  Star,  
   Play, 
   Sparkles, 
   ArrowLeft, 
-  Video, 
-  FileText, 
-  Tag, 
+  Video,  
   Building,
   Terminal,
-  Bookmark,
-  Check
 } from 'lucide-react';
 import { dsaProblems } from '../data/dsaData';
 import { DsaProblem, UserStats } from '../types';
@@ -52,12 +46,27 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
   const [problemNotes, setProblemNotes] = useState<Record<string, string>>({
     'two-sum': 'Remember to use a Map to keep track of indices. Complexity is O(n).'
   });
+
   const [tempNotes, setTempNotes] = useState('');
+  const [completedProblems, setCompletedProblems] = useState<Record<string, boolean>>({});
   
-    React.useEffect(() => {
+    useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const savedProgress = localStorage.getItem("dsaProgress");
+
+  if (savedProgress) {
+    setCompletedProblems(JSON.parse(savedProgress));
+  }
+}, []);
+useEffect(() => {
+  localStorage.setItem(
+    "dsaProgress",
+    JSON.stringify(completedProblems)
+  );
+}, [completedProblems]);
 
   if (loading) return <DSAModuleSkeleton />;
   
@@ -115,18 +124,40 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
   const handleToggleBookmark = (id: string) => {
     setBookmarked(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [id]: !prev[id],
     }));
   };
 
+  const handleToggleCompletion = (id: string) => {
+    setCompletedProblems(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }; 
+
+  const handleResetProgress = () => {
+    setCompletedProblems({});
+    localStorage.removeItem("dsaProgress");
+  };
+
+
   // Filter problems
+  
   const filteredProblems = dsaProblems.filter(prob => {
-    const matchesSearch = prob.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = prob.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           prob.category.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesDifficulty = selectedDifficulty === 'All' || prob.difficulty === selectedDifficulty;
-    const matchesSheet = selectedSheet === 'All' || prob.sheets.includes(selectedSheet as any);
+    const matchesSheet = selectedSheet === 'All' || prob.sheets.includes(selectedSheet as "Blind 75" | "NeetCode 150" | "Striver Sheet");
     return matchesSearch && matchesDifficulty && matchesSheet;
   });
+
+  // Calculate completed problems
+  const completedCount = Object.values(completedProblems).filter(Boolean).length;
+
+  const completionPercentage =
+    dsaProblems.length === 0
+      ? 0
+      : Math.round((completedCount / dsaProblems.length) * 100);
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto h-[calc(100vh-100px)] overflow-y-auto">
@@ -138,9 +169,28 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Structured Coding Sandbox</h2>
-              <p className="text-xs text-slate-500">Practice curated sheets, search difficulties, and track your revision bookmarks.</p>
+              <h2 className="text-xl font-bold text-white tracking-tight">
+                Structured Coding Sandbox
+              </h2>
+
+              <p className="text-xs text-slate-500">
+                Practice curated sheets, search difficulties, and track your revision bookmarks.
+              </p>
+
+              <div className="mt-3 flex items-center gap-4">
+                <span className="text-sm font-semibold text-emerald-400">
+                  Progress: {completedCount}/{dsaProblems.length} ({completionPercentage}%)
+                </span>
+
+                 <button
+                  onClick={handleResetProgress}
+                  className="px-3 py-1 text-xs rounded-md bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700"
+                >
+                  Reset Progress
+                </button>
+              </div>
             </div>
+            
             
             {/* Sheet Tabs */}
             <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800 self-start">
@@ -202,6 +252,7 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-900 text-slate-400 text-xs font-bold uppercase tracking-wider">
                   <tr>
+                    <th className="px-6 py-4">Completed</th>
                     <th className="px-6 py-4">Title</th>
                     <th className="px-6 py-4">Difficulty</th>
                     <th className="px-6 py-4">Category</th>
@@ -218,7 +269,20 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
                         className="hover:bg-slate-900/30 transition-colors group cursor-pointer"
                         onClick={() => handleSelectProblem(prob)}
                       >
+                        
                         <td className="px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={!! completedProblems[prob.id]}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              handleToggleCompletion(prob.id);
+                            }}
+                            className="w-4 h-4 cursor-pointer"
+                            />
+                        </td>
+                        <td className="px-6 py-4">
+
                           <div className="flex items-center gap-3">
                             <button 
                               onClick={(e) => {
@@ -275,7 +339,7 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center text-slate-500 font-medium">
+                      <td colSpan={7} className="px-6 py-12 text-center text-slate-500 font-medium">
                         No problems found matching filters. Try clear query tags.
                       </td>
                     </tr>
