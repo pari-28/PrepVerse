@@ -60,6 +60,8 @@ export default function ResumeStudio() {
   // ATS Calculations
   const [score, setScore] = useState(0);
   const [checklist, setChecklist] = useState<{ label: string; passed: boolean }[]>([]);
+  const [completion, setCompletion] = useState(0);
+  const [missingSections, setMissingSections] = useState<string[]>([]);
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -85,7 +87,7 @@ const isValidPortfolio = (url: string) =>
 
   useEffect(() => {
     // Dynamically calculate ATS compliance score & build checklist
-   const checks = [
+  const checks = [
   {
     label: 'Has GitHub profile linked',
     passed: isValidGithub(resume.github),
@@ -117,15 +119,70 @@ const isValidPortfolio = (url: string) =>
     passed: resume.education.length >= 1,
   },
 ];
+const passedCount = checks.filter((c) => c.passed).length;
+  const computedScore = Math.round((passedCount / checks.length) * 100);
 
-    const passedCount = checks.filter(c => c.passed).length;
-    const computedScore = Math.round((passedCount / checks.length) * 100);
+  setScore(computedScore);
+  setChecklist(checks);
+}, [resume]);
 
-    setScore(computedScore);
-    setChecklist(checks);
-  }, [resume]);
+useEffect(() => {
+  const missing: string[] = [];
+  let completed = 0;
 
-   if (loading) return <ResumeStudioSkeleton />;
+  if (resume.fullName.trim()) completed++;
+  else missing.push("Full Name");
+
+  if (isValidEmail(resume.email)) completed++;
+  else missing.push("Email");
+
+  if (isValidPhone(resume.phone)) completed++;
+  else missing.push("Phone");
+
+  if (
+    resume.education.some(
+      (e: ResumeData["education"][number]) =>
+        e.institution.trim() !== "" &&
+        e.degree.trim() !== ""
+    )
+  ) {
+    completed++;
+  } else {
+    missing.push("Education");
+  }
+
+  if (
+    resume.experience.some(
+      (e: ResumeData["experience"][number]) =>
+        e.company.trim() !== "" &&
+        e.role.trim() !== ""
+    )
+  ) {
+    completed++;
+  } else {
+    missing.push("Experience");
+  }
+
+  if (
+    resume.projects.some(
+      (p: ResumeData["projects"][number]) =>
+        p.name.trim() !== "" &&
+        p.description.trim() !== ""
+    )
+  ) {
+    completed++;
+  } else {
+    missing.push("Projects");
+  }
+
+  if (resume.skills.length > 0) completed++;
+  else missing.push("Skills");
+
+  setCompletion(Math.round((completed / 7) * 100));
+  setMissingSections(missing);
+}, [resume]);
+
+  if (loading) return <ResumeStudioSkeleton />;
 
   // Form management helpers
   const handleAddEducation = () => {
@@ -301,6 +358,49 @@ const isValidPortfolio = (url: string) =>
             </div>
           </div>
 
+          <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40">
+
+  <div className="flex justify-between items-center mb-3">
+    <h3 className="text-sm font-bold text-slate-300">
+      Resume Completion
+    </h3>
+
+    <span className="text-indigo-400 font-bold">
+      {completion}%
+    </span>
+  </div>
+
+  <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-indigo-500 transition-all duration-500"
+      style={{ width: `${completion}%` }}
+    />
+  </div>
+
+  {missingSections.length > 0 ? (
+    <div className="mt-4">
+      <p className="text-xs text-slate-400 mb-2">
+        Complete these sections:
+      </p>
+
+      <ul className="space-y-1">
+        {missingSections.map(section => (
+          <li
+            key={section}
+            className="text-xs text-red-400"
+          >
+            • {section}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <p className="mt-4 text-xs text-green-400 font-semibold">
+        🎉 Resume Complete!
+    </p>
+  )}
+
+</div>
           {/* Form: Personal Info */}
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
             <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider border-b border-slate-850 pb-2">1. Contact & Social Profiles</h3>
