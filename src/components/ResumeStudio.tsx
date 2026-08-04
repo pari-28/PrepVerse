@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ResumeData } from '../types';
 import { ResumeStudioSkeleton } from "./SkeletonLoaders";
+import ResumeProgress from "./ResumeProgress";
 
 export default function ResumeStudio() {
   const [loading, setLoading] = useState(true);
@@ -273,6 +274,9 @@ const isValidPortfolio = (url: string) =>
         {/* LEFT COLUMN: EDITABLE CONSTRUCTOR & ATS RATING (7 COLS - Hidden when printing) */}
         <div className="lg:col-span-7 space-y-6 print:hidden">
           
+          {/* Resume Completion Progress (Issue #34) */}
+          <ResumeProgress resume={resume} />
+        
           {/* ATS Score & Checklist Panel */}
           <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             <div className="md:col-span-4 text-center border-b md:border-b-0 md:border-r border-slate-850 pb-4 md:pb-0">
