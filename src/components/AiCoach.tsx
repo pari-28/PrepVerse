@@ -3,24 +3,33 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   Sparkles, 
   Send, 
   Brain, 
-  HelpCircle, 
-  Code, 
   Compass, 
   User, 
   ArrowRight,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  Trash2,
+  Clock,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { AICoachSkeleton } from "./SkeletonLoaders";
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+interface Conversation {
+  id: string;
+  prompt: string;
+  response: string;
+  timestamp: number;
 }
 
 export default function AiCoach() {
@@ -31,6 +40,8 @@ export default function AiCoach() {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -38,10 +49,37 @@ export default function AiCoach() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('aiCoachHistory');
+      if (stored) {
+        const parsed = JSON.parse(stored) as Conversation[];
+        if (Array.isArray(parsed)) {
+          setConversationHistory(parsed);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load conversation history:', err);
+    }
+  }, []);
+
+  const saveHistory = useCallback((history: Conversation[]) => {
+    try {
+      localStorage.setItem('aiCoachHistory', JSON.stringify(history));
+    } catch (err) {
+      console.error('Failed to save conversation history:', err);
+    }
+  }, []);
+
+  const clearHistory = () => {
+    setConversationHistory([]);
+    localStorage.removeItem('aiCoachHistory');
+  };
 
   if (loading) return <AICoachSkeleton />;
 
@@ -54,8 +92,7 @@ export default function AiCoach() {
     }
     setErrorMessage('');
 
-    const updatedMessages = [...messages, { role: 'user', content: textToSend } as Message];
-    setMessages(updatedMessages);
+    setMessages(prev => [...prev, { role: 'user', content: textToSend } as Message]);
     setIsLoading(true);
 
     try {
@@ -71,7 +108,21 @@ export default function AiCoach() {
 
       const data = await response.json();
       if (response.ok) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+        const assistantMessage = { role: 'assistant', content: data.reply } as Message;
+        setMessages(prev => [...prev, assistantMessage]);
+        
+        // Save to conversation history
+        const newConversation: Conversation = {
+          id: crypto.randomUUID(),
+          prompt: textToSend,
+          response: data.reply,
+          timestamp: Date.now()
+        };
+        setConversationHistory(prev => {
+          const updated = [newConversation, ...prev];
+          saveHistory(updated);
+          return updated;
+        });
       } else {
         setErrorMessage(data.error || 'Failed to analyze request. Check console logs.');
       }
@@ -100,6 +151,54 @@ export default function AiCoach() {
         </h2>
         <p className="text-xs text-slate-500">Ask career questions, design architectures, or outline mock algorithms with server-side Gemini intelligence.</p>
       </div>
+
+      {/* Conversation History */}
+      {conversationHistory.length > 0 && (
+        <div className="shrink-0 border border-slate-900 bg-slate-950 rounded-3xl overflow-hidden">
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            aria-expanded={showHistory}
+            aria-controls="conversation-history-panel"
+            className="w-full px-6 py-3 flex items-center justify-between bg-slate-900/50 hover:bg-slate-900 transition-colors text-left"
+          >
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-indigo-400" />
+              <span className="text-sm font-medium text-slate-200">Conversation History</span>
+              <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">{conversationHistory.length}</span>
+            </div>
+            {showHistory ? (
+              <ChevronUp className="w-4 h-4 text-slate-400 transition-transform" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-slate-400 transition-transform" />
+            )}
+          </button>
+          {showHistory && (
+            <div id="conversation-history-panel" className="p-4 space-y-3 max-h-60 overflow-y-auto">
+              {conversationHistory.map((conv) => (
+                <div
+                  key={conv.id}
+                  className="p-3 bg-slate-900/50 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <p className="text-xs font-medium text-slate-300 line-clamp-2 flex-1 pr-2">{conv.prompt}</p>
+                    <span className="text-[10px] text-slate-500 shrink-0 font-mono">
+                      {new Date(conv.timestamp).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 line-clamp-2">{conv.response}</p>
+                </div>
+              ))}
+              <button
+                onClick={clearHistory}
+                className="w-full mt-3 p-2 bg-rose-950/40 hover:bg-rose-950/60 border border-rose-900/30 text-rose-400 text-xs font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Clear History
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Chat Messages Panel */}
       <div className="flex-1 min-h-[300px] border border-slate-900 bg-slate-950 rounded-3xl p-6 overflow-y-auto space-y-6">
