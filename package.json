@@ -19,7 +19,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.5.2",
+    "express-rate-limit": "^8.6.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.42.2",
     "react": "^19.0.1",
