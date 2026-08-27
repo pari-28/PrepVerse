@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Code, 
   Search, 
@@ -19,7 +19,8 @@ import {
   Building,
   Terminal,
   Bookmark,
-  Check
+  Check,
+  RotateCcw
 } from 'lucide-react';
 import { dsaProblems } from '../data/dsaData';
 import { DsaProblem, UserStats } from '../types';
@@ -29,6 +30,8 @@ interface DsaModuleProps {
   userStats: UserStats;
   setUserStats: React.Dispatch<React.SetStateAction<UserStats>>;
 }
+
+const COMPLETED_KEY = 'prepverse_dsa_completed_topics';
 
 export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
   const [loading, setLoading] = useState(true);
@@ -53,7 +56,36 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
     'two-sum': 'Remember to use a Map to keep track of indices. Complexity is O(n).'
   });
   const [tempNotes, setTempNotes] = useState('');
-  
+
+  // DSA progress tracking (persists in localStorage)
+  const [completedTopics, setCompletedTopics] = useState<Record<string, boolean>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(COMPLETED_KEY) || '{}');
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(COMPLETED_KEY, JSON.stringify(completedTopics));
+  }, [completedTopics]);
+
+  const handleToggleCompleted = (id: string) => {
+    setCompletedTopics(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const handleResetProgress = () => {
+    if (!confirm('Reset all DSA progress? This cannot be undone.')) return;
+    setCompletedTopics({});
+    localStorage.removeItem(COMPLETED_KEY);
+  };
+
+  const completedCount = dsaProblems.filter(prob => completedTopics[prob.id]).length;
+  const completionPercent = Math.round((completedCount / dsaProblems.length) * 100);
+
     React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -141,6 +173,31 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
               <h2 className="text-xl font-bold text-white tracking-tight">Structured Coding Sandbox</h2>
               <p className="text-xs text-slate-500">Practice curated sheets, search difficulties, and track your revision bookmarks.</p>
             </div>
+
+            {/* Overall Progress */}
+            <div className="flex items-center gap-4 bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-2.5">
+              <div className="w-32">
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider mb-1">
+                  <span className="text-slate-400">Progress</span>
+                  <span className="text-blue-400">{completionPercent}%</span>
+                </div>
+                <div className="h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-300"
+                    style={{ width: `${completionPercent}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-slate-600 mt-1">{completedCount} of {dsaProblems.length} topics completed</p>
+              </div>
+              <button
+                onClick={handleResetProgress}
+                title="Reset all progress"
+                className="flex items-center gap-1.5 bg-slate-950 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-800 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Reset
+              </button>
+            </div>
             
             {/* Sheet Tabs */}
             <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800 self-start">
@@ -220,7 +277,22 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <button 
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleCompleted(prob.id);
+                              }}
+                              title={completedTopics[prob.id] ? 'Mark as not completed' : 'Mark as completed'}
+                              aria-label={completedTopics[prob.id] ? `Mark ${prob.title} as not completed` : `Mark ${prob.title} as completed`}
+                              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors cursor-pointer shrink-0 ${
+                                completedTopics[prob.id]
+                                  ? 'bg-emerald-500 border-emerald-500 text-white'
+                                  : 'border-slate-700 hover:border-emerald-400'
+                              }`}
+                            >
+                              {completedTopics[prob.id] && <Check className="w-3.5 h-3.5" />}
+                            </button>
+                            <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleToggleBookmark(prob.id);
@@ -302,6 +374,18 @@ export default function DsaModule({ userStats, setUserStats }: DsaModuleProps) {
             </button>
 
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => handleToggleCompleted(selectedProblem.id)}
+                aria-pressed={!!completedTopics[selectedProblem.id]}
+                className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition-colors cursor-pointer ${
+                  completedTopics[selectedProblem.id]
+                    ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/30'
+                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-emerald-400 hover:border-emerald-800'
+                }`}
+              >
+                <CheckCircle className="w-4 h-4" />
+                {completedTopics[selectedProblem.id] ? 'Completed' : 'Mark as Completed'}
+              </button>
               <span className={`text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider ${
                 selectedProblem.difficulty === 'Easy' ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-900/30' :
                 selectedProblem.difficulty === 'Medium' ? 'bg-amber-950/40 text-amber-400 border border-amber-900/30' :
