@@ -19,6 +19,7 @@ import {
   TrendingUp, 
   Zap,
   Calendar,
+  Bookmark,
   ChevronRight
 } from 'lucide-react';
 import { UserStats } from '../types';
@@ -29,8 +30,31 @@ interface DashboardProps {
   setCurrentTab: (tab: string) => void;
 }
 
+// Define a type-safe structure for the bookmark object
+interface BookmarkedCompany {
+  id: string;
+  name: string;
+  logo: string;
+  roundsCount: number;
+}
+
 export default function Dashboard({ userStats, setUserStats, setCurrentTab }: DashboardProps) {
   const [loading, setLoading] = useState(true);
+  const [bookmarkedCompanies, setBookmarkedCompanies] = useState<BookmarkedCompany[]>([]);
+
+  // This hook runs every time the Dashboard mounts or displays, keeping session states perfectly synchronized
+  React.useEffect(() => {
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    setBookmarkedCompanies(saved);
+  }, []);
+
+  const removeBookmarkFromDashboard = (id: string) => {
+    const saved: BookmarkedCompany[] = JSON.parse(localStorage.getItem('bookmarkedCompanies') || '[]');
+    const updated = saved.filter((c: BookmarkedCompany) => c.id !== id);
+    localStorage.setItem('bookmarkedCompanies', JSON.stringify(updated));
+    setBookmarkedCompanies(updated);
+  };
+
   const [plannerTasks, setPlannerTasks] = useState([
     { id: '1', title: 'Two Sum Map optimization', day: 'Monday', completed: true },
     { id: '2', title: 'Quantitative Speed quiz', day: 'Tuesday', completed: false },
@@ -346,6 +370,42 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
 
         </div>
 
+      </div>
+
+      {/* BOOKMARKED COMPANIES SECTION */}
+      <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <Bookmark className="w-4 h-4 text-amber-400 fill-amber-400/10" />
+          Bookmarked Preparation Guides
+        </h3>
+        
+        {bookmarkedCompanies.length === 0 ? (
+          <p className="text-xs text-slate-500 py-2">No companies bookmarked yet. Explore Placement Guides to save your favorites!</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {bookmarkedCompanies.map((company: BookmarkedCompany) => (
+              <div key={company.id} className="p-4 bg-slate-950/60 rounded-2xl border border-slate-900 flex items-center justify-between group">
+                <div className="flex items-center gap-3">
+                  <img 
+                    src={company.logo} 
+                    alt={company.name} 
+                    className="w-10 h-10 rounded-xl border border-slate-800 object-cover" 
+                  />
+                  <div>
+                    <h4 className="text-xs font-bold text-white group-hover:text-blue-400 transition-colors">{company.name}</h4>
+                    <p className="text-[10px] text-slate-500">{company.roundsCount} Interview Rounds</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => removeBookmarkFromDashboard(company.id)}
+                  className="text-[10px] bg-slate-900 text-slate-400 hover:text-rose-400 hover:bg-rose-950/25 border border-slate-800 hover:border-rose-900 font-bold px-2.5 py-1.5 rounded-xl transition-all cursor-pointer"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* RECENTLY SOLVED PROBLEM LOG */}
