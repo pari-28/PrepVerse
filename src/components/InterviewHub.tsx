@@ -4,16 +4,16 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  MessageSquare, 
-  Sparkles, 
-  ChevronRight, 
-  ArrowLeft, 
-  Play, 
-  Award, 
-  HelpCircle, 
-  RefreshCw, 
-  AlertCircle, 
+import {
+  MessageSquare,
+  Sparkles,
+  ChevronRight,
+  ArrowLeft,
+  Play,
+  Award,
+  HelpCircle,
+  RefreshCw,
+  AlertCircle,
   CheckCircle,
   Clock,
   Terminal,
@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import { interviewQuestions, InterviewQuestion } from '../data/interviewData';
 import { UserStats } from '../types';
+// ponytail: import pure framework-agnostic grading logic from use-cases
+import { parseEvaluation, xpForInterviewScore, nextCompletedToday, type ParsedEvaluation } from '../use-cases/interview-grading';
 
 interface InterviewHubProps {
   userStats: UserStats;
@@ -30,17 +32,11 @@ interface InterviewHubProps {
 export default function InterviewHub({ userStats, setUserStats }: InterviewHubProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeQuestion, setActiveQuestion] = useState<InterviewQuestion | null>(null);
-  
+
   // Simulated Interview states
   const [userAnswer, setUserAnswer] = useState('');
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evaluationResult, setEvaluationResult] = useState<{
-    score: number;
-    pros: string[];
-    cons: string[];
-    reference: string;
-    rawText: string;
-  } | null>(null);
+  const [evaluationResult, setEvaluationResult] = useState<ParsedEvaluation | null>(null);
   const [errorText, setErrorText] = useState('');
 
   const categories = [
@@ -85,59 +81,16 @@ export default function InterviewHub({ userStats, setUserStats }: InterviewHubPr
 
       const data = await response.json();
       if (response.ok) {
-        // Parse the formatted text from Gemini
-        const rawText = data.evaluation;
-        
-        // Extract numerical score from text (looking for "Score: 7" or similar)
-        let score = 5;
-        const scoreMatch = rawText.match(/Score:\s*(\d+)/i) || rawText.match(/\*\*Score\*\*:\s*(\d+)/i);
-        if (scoreMatch) {
-          score = parseInt(scoreMatch[1], 10);
-        }
+        // Delegate parsing + XP calc to pure use-case
+        const parsed = parseEvaluation(data.evaluation, activeQuestion.answer);
+        setEvaluationResult(parsed);
 
-        // Split bullet points for UI presentation
-        const pros: string[] = [];
-        const cons: string[] = [];
-        let reference = '';
-
-        const lines = rawText.split('\n');
-        let currentSection: 'pros' | 'cons' | 'ref' | 'none' = 'none';
-
-        lines.forEach((line: string) => {
-          if (line.toLowerCase().includes('pros') || line.toLowerCase().includes('went well')) {
-            currentSection = 'pros';
-          } else if (line.toLowerCase().includes('cons') || line.toLowerCase().includes('missing')) {
-            currentSection = 'cons';
-          } else if (line.toLowerCase().includes('reference') || line.toLowerCase().includes('model answer')) {
-            currentSection = 'ref';
-          } else if (line.trim().startsWith('*') || line.trim().startsWith('-')) {
-            const bulletText = line.replace(/^[\s*-]+/, '').trim();
-            if (currentSection === 'pros') pros.push(bulletText);
-            if (currentSection === 'cons') cons.push(bulletText);
-          } else if (currentSection === 'ref') {
-            reference += line + '\n';
-          }
-        });
-
-        // Fallback if parsing fails - present nicely
-        if (pros.length === 0) pros.push("Strong core definitions provided by candidate.");
-        if (cons.length === 0) cons.push("Verify edge case scenarios and scaling performance variables.");
-        if (!reference) reference = activeQuestion.answer;
-
-        setEvaluationResult({
-          score,
-          pros,
-          cons,
-          reference: reference.trim(),
-          rawText
-        });
-
-        // Add XP based on score (e.g. score * 30 XP)
-        const earnedXp = score * 30;
+        // Add XP using pure use-case
+        const earnedXp = xpForInterviewScore(parsed.score);
         setUserStats(prev => ({
           ...prev,
           xp: prev.xp + earnedXp,
-          completedToday: Math.min(prev.dailyGoal, prev.completedToday + 1)
+          completedToday: nextCompletedToday(prev.completedToday, prev.dailyGoal)
         }));
 
       } else {

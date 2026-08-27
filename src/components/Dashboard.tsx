@@ -1,27 +1,29 @@
-import { DashboardSkeleton } from "./SkeletonLoaders";  
+import { DashboardSkeleton } from "./SkeletonLoaders";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
 import React, { useState } from 'react';
-import { 
-  Flame, 
-  Award, 
-  CheckCircle, 
-  Clock, 
-  Code, 
-  FileText, 
-  BrainCircuit, 
-  Sparkles, 
-  Plus, 
-  Play, 
-  TrendingUp, 
+import {
+  Flame,
+  Award,
+  CheckCircle,
+  Clock,
+  Code,
+  FileText,
+  BrainCircuit,
+  Sparkles,
+  Plus,
+  Play,
+  TrendingUp,
   Zap,
   Calendar,
   ChevronRight
 } from 'lucide-react';
 import { UserStats } from '../types';
+// ponytail: import pure framework-agnostic task XP logic from use-cases
+import { computeTaskXp, clamp } from '../use-cases/resume-ats';
 
 interface DashboardProps {
   userStats: UserStats;
@@ -55,24 +57,17 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
     const nextState = !taskToToggle.completed;
 
     // 1. Update local planner tasks state
-    setPlannerTasks(prev => prev.map(task => 
+    setPlannerTasks(prev => prev.map(task =>
       task.id === id ? { ...task, completed: nextState } : task
     ));
 
-    // 2. Perform the user stats side-effect outside the state updater
-    if (nextState) {
-      setUserStats(stats => ({ 
-        ...stats, 
-        xp: stats.xp + 50, 
-        completedToday: Math.min(stats.dailyGoal, stats.completedToday + 1)
-      }));
-    } else {
-      setUserStats(stats => ({ 
-        ...stats, 
-        xp: Math.max(0, stats.xp - 50),
-        completedToday: Math.max(0, stats.completedToday - 1)
-      }));
-    }
+    // 2. Perform the user stats side-effect using pure use-case
+    const xpDelta = computeTaskXp(nextState);
+    setUserStats(stats => ({
+      ...stats,
+      xp: clamp(stats.xp + xpDelta, 0, Infinity),
+      completedToday: clamp(stats.completedToday + (nextState ? 1 : -1), 0, stats.dailyGoal)
+    }));
   };
 
   const handleAddTask = (e: React.FormEvent) => {
