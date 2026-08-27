@@ -10,6 +10,21 @@ import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import rateLimit from 'express-rate-limit';
 
+// ponytail: pure framework-agnostic business rules live in src/use-cases.
+// Route handlers below delegate prompt construction + security checks there.
+import {
+  hasMaliciousContent,
+  isPayloadTooLarge,
+  buildStudyPlanPrompt,
+  buildResumeReviewPrompt,
+  buildInterviewGradePrompt,
+  studyPlanConfig,
+  resumeReviewConfig,
+  interviewGradeConfig,
+  chatConfig,
+  chatSystemInstruction,
+} from './src/use-cases/ai-prompts';
+
 dotenv.config();
 
 const app = express();
@@ -55,32 +70,11 @@ const aiRateLimiter = rateLimit({
 
 // Basic Prompt Injection Protection Middleware
 const promptInjectionCheck = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const blocklist = [
-    'ignore previous instructions',
-    'ignore all previous',
-    'print your system prompt',
-    'system instruction',
-    'developer mode enabled'
-  ];
-
-  // Helper to recursively check string values
-  const hasMaliciousContent = (obj: any): boolean => {
-    if (typeof obj === 'string') {
-      const lowerStr = obj.toLowerCase();
-      return blocklist.some(phrase => lowerStr.includes(phrase));
-    }
-    if (typeof obj === 'object' && obj !== null) {
-      return Object.values(obj).some(val => hasMaliciousContent(val));
-    }
-    return false;
-  };
-
   if (hasMaliciousContent(req.body)) {
     return res.status(403).json({ error: 'Security Exception: Potentially malicious prompt detected.' });
   }
 
-  // Length check (prevent extremely long payloads)
-  if (JSON.stringify(req.body).length > 10000) {
+  if (isPayloadTooLarge(req.body)) {
     return res.status(413).json({ error: 'Payload Too Large: Prompt exceeds maximum allowed length.' });
   }
 
@@ -96,18 +90,16 @@ app.post('/api/gemini/chat', aiRateLimiter, promptInjectionCheck, async (req, re
     }
 
     const ai = getGeminiClient();
-    
-    // Construct system instructions
-    const systemInstruction = `You are PrepVerse AI Coach, an expert tech recruiter and elite competitive coder. 
-Help the student prepare for placements and internships. Keep answers highly professional, actionable, structured with markdown, and direct. Avoid generic, flowery text. Refer to the student's preparation goals when helpful.`;
 
-    // Map history if present, or do a simple content generation
+    // System instruction + config come from the pure use-case
+    const { systemInstruction, temperature } = chatConfig();
+
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
       contents: prompt,
       config: {
         systemInstruction,
-        temperature: 0.7,
+        temperature,
       }
     });
 
@@ -122,29 +114,17 @@ Help the student prepare for placements and internships. Keep answers highly pro
 app.post('/api/gemini/study-plan', aiRateLimiter, promptInjectionCheck, async (req, res) => {
   try {
     const { targetCompany, dailyHours, currentYear, coreSkills, currentRating } = req.body;
-    
+
     const ai = getGeminiClient();
-    const prompt = `Create a highly tailored 4-week placement study roadmap for a student with these parameters:
-- **Target Company**: ${targetCompany || 'Top Product Companies'}
-- **Daily Prep Budget**: ${dailyHours || '2'} hours/day
-- **Current Standing**: Year ${currentYear || '3'} student
-- **Current LeetCode/Coding Rating**: ${currentRating || 'Beginner'}
-- **Current Core Skillset**: ${coreSkills || 'C++, Data Structures'}
-
-Break down the roadmap week-by-week. For each week specify:
-1. Core Topics (e.g., Arrays, Sliding Window, Trees, System Design)
-2. Daily hour breakdown (e.g., Day 1-2: Theory, Day 3-5: Sheet Problems, Day 6: Mock, Day 7: Revision)
-3. 3 Specific problems to target
-4. Crucial Tip for cracking ${targetCompany || 'Product Companies'} interviews.
-
-Return the response in well-formatted Markdown with standard headers.`;
+    const prompt = buildStudyPlanPrompt({ targetCompany, dailyHours, currentYear, coreSkills, currentRating });
+    const { systemInstruction, temperature } = studyPlanConfig();
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
       contents: prompt,
       config: {
-        systemInstruction: 'You are an elite placement coordinator who builds concrete, calendar-style weekly roadmap plans. Never return empty boxes or placeholders.',
-        temperature: 0.2
+        systemInstruction,
+        temperature,
       }
     });
 
@@ -164,24 +144,15 @@ app.post('/api/gemini/resume-review', aiRateLimiter, promptInjectionCheck, async
     }
 
     const ai = getGeminiClient();
-    const prompt = `Review and optimize the following resume bullet point or project description to maximize its ATS matching score and impact.
-Targeting Role: ${role || 'Software Engineering Intern'}
-Preferred Keywords to incorporate: ${techKeywords || 'React, Node, TypeScript, Performance, Scale'}
-
-Original Resume Segment:
-"${bulletPoint}"
-
-Provide your feedback in three concise blocks:
-1. **Optimized Segment**: Rewritten bullet point following the Google XYZ formula: "Accomplished [X] as measured by [Y], by doing [Z]" with active action verbs.
-2. **Key Keywords Added**: List of crucial terms integrated.
-3. **Aesthetic Impact Tip**: Why this is more convincing to a tech recruiter.`;
+    const prompt = buildResumeReviewPrompt({ bulletPoint, role, techKeywords });
+    const { systemInstruction, temperature } = resumeReviewConfig();
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
       contents: prompt,
       config: {
-        systemInstruction: 'You are an expert resume consultant who works with candidates applying to Ivy League tech companies and top tier startups. Keep it precise and high impact.',
-        temperature: 0.3
+        systemInstruction,
+        temperature,
       }
     });
 
@@ -201,23 +172,15 @@ app.post('/api/gemini/interview-grade', aiRateLimiter, promptInjectionCheck, asy
     }
 
     const ai = getGeminiClient();
-    const prompt = `Evaluate this candidate's response to the technical/behavioral interview question:
-- **Category**: ${category || 'Core Computer Science'}
-- **Question**: ${question}
-- **Candidate Answer**: "${candidateAnswer}"
-
-Provide a detailed evaluation structured as follows:
-- **Score**: [Provide a numerical integer score from 1 to 10]
-- **Pros / What went well**: [State what key terms or concepts they explained correctly]
-- **Cons / Missing details**: [Highlight any errors, vagueness, or missing industry standards]
-- **Standard Reference Answer**: [Give a concise, ideal model answer incorporating proper technical terms]`;
+    const prompt = buildInterviewGradePrompt({ question, candidateAnswer, category });
+    const { systemInstruction, temperature } = interviewGradeConfig();
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
       contents: prompt,
       config: {
-        systemInstruction: 'You are an engineering manager grading technical candidates. Be constructive, strict, and precise in your grading scale. Award higher scores only for comprehensive, structurally sound answers.',
-        temperature: 0.2
+        systemInstruction,
+        temperature,
       }
     });
 

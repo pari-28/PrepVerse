@@ -4,15 +4,15 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  Sparkles, 
-  Printer, 
-  Plus, 
-  Trash2, 
-  CheckCircle, 
-  AlertCircle, 
-  TrendingUp, 
+import {
+  FileText,
+  Sparkles,
+  Printer,
+  Plus,
+  Trash2,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
   Award,
   ChevronDown,
   RefreshCw,
@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { ResumeData } from '../types';
 import { ResumeStudioSkeleton } from "./SkeletonLoaders";
+// ponytail: import pure framework-agnostic ATS logic from use-cases
+import { computeAtsScore, type AtsReport, isValidEmail, isValidPhone, isValidGithub, isValidLinkedIn, isValidPortfolio } from '../use-cases/resume-ats';
 
 export default function ResumeStudio() {
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function ResumeStudio() {
   });
 
   const [activeTemplate, setActiveTemplate] = useState<'minimal' | 'executive'>('minimal');
-  
+
   // AI Bullet Point Optimizer states
   const [bulletToOptimize, setBulletToOptimize] = useState('Helped optimize load times for the company dashboard.');
   const [aiSuggestions, setAiSuggestions] = useState('');
@@ -57,73 +59,19 @@ export default function ResumeStudio() {
   // Skills input helper
   const [newSkill, setNewSkill] = useState('');
 
-  // ATS Calculations
-  const [score, setScore] = useState(0);
-  const [checklist, setChecklist] = useState<{ label: string; passed: boolean }[]>([]);
+  // ATS Calculations - computed from pure use-case
+  const [atsReport, setAtsReport] = useState<AtsReport>({ score: 0, checks: [] });
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  const isValidEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-const isValidPhone = (phone: string) =>
-  /^\+?[1-9]\d{7,14}$/.test(phone.replace(/[\s()-]/g, ""));
-
-const isValidGithub = (url: string) =>
-  /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9-]+\/?$/.test(url.trim());
-
-const isValidLinkedIn = (url: string) =>
-  /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[A-Za-z0-9-_%]+\/?$/.test(url.trim());
-
-
-const isValidPortfolio = (url: string) =>
-  /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/.test(
-    url.trim()
-  );
-
   useEffect(() => {
-    // Dynamically calculate ATS compliance score & build checklist
-   const checks = [
-  {
-    label: 'Has GitHub profile linked',
-    passed: isValidGithub(resume.github),
-  },
-  {
-    label: 'Has LinkedIn profile linked',
-    passed: isValidLinkedIn(resume.linkedin),
-  },
-  {
-    label: 'Has Phone and Email listed',
-    passed:
-      isValidPhone(resume.phone) &&
-      isValidEmail(resume.email),
-  },
-  {
-    label: 'At least 5 core technical skills',
-    passed: resume.skills.length >= 5,
-  },
-  {
-    label: 'At least 1 detailed project',
-    passed: resume.projects.length >= 1,
-  },
-  {
-    label: 'Professional work experience listed',
-    passed: resume.experience.length >= 1,
-  },
-  {
-    label: 'Education details listed',
-    passed: resume.education.length >= 1,
-  },
-];
-
-    const passedCount = checks.filter(c => c.passed).length;
-    const computedScore = Math.round((passedCount / checks.length) * 100);
-
-    setScore(computedScore);
-    setChecklist(checks);
+    setAtsReport(computeAtsScore(resume));
   }, [resume]);
+
+  // Destructure for template rendering convenience
+  const { score, checks: checklist } = atsReport;
 
    if (loading) return <ResumeStudioSkeleton />;
 
