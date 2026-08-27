@@ -24,48 +24,69 @@ export const companyPreps: CompanyPrepInfo[] = [
       'Strong proficiency in data structures, algorithms, and system design.'
     ],
     hiringProcess: [
-      'Online Assessment / Coding Challenge (1-2 Coding questions)',
-      'Technical Screening Round (45 minutes, algorithmic problem solving)',
-      '3-4 Virtual Onsite Technical Rounds (Algorithmic problem solving + Googlyness/Behavioral)'
+      'Resume Screening & Recruiter Initial Call',
+      'Online Assessment (OA) - 2 Multi-Part Coding Questions (90 mins)',
+      'Technical Phone Screen (1 Round - Data Structures & Algorithms)',
+      'Onsite Loop (3-4 Technical Rounds focusing on complex problem-solving)',
+      'Googliness & Leadership Round (Behavioral & Culture Fit)',
+      'Hiring Committee Review & Team Matching'
     ],
     oaPattern: {
       duration: '90 Minutes',
       sections: [
-        { name: 'Coding Question 1', questions: '1 Medium/Hard DSA', description: 'Focuses on graphs, trees, dynamic programming or complex arrays.' },
-        { name: 'Coding Question 2', questions: '1 Medium/Hard DSA', description: 'Advanced graph traversal, math models, or optimized prefix trees.' }
+        { 
+          name: 'Coding Question 1', 
+          questions: '1 Medium/Hard DSA', 
+          description: 'Conducted on a proprietary editor platform. Focuses heavily on Graph algorithms (DFS/BFS), multi-pointer arrays, or complex Tree data structures with strict evaluate constraints.' 
+        },
+        { 
+          name: 'Coding Question 2', 
+          questions: '1 Medium/Hard DSA', 
+          description: 'Advanced Graph traversal, Dynamic Programming formulations, or optimized Prefix Trees. Optimization for edge cases and runtime bottlenecks is heavily evaluated.' 
+        }
       ]
     },
     rounds: [
       {
-        name: 'Technical Round 1-3 (Coding)',
-        focus: 'Data Structures, Graph Traversals, Dynamic Programming, Time/Space optimization',
+        name: 'Technical Phone Screen',
+        focus: 'Core Data Structures, Fundamental Algorithms, Base Complexity Analysis',
+        duration: '45 mins',
+        tips: [
+          'A 45-minute deep dive with a Google engineer over a collaborative text doc without syntax highlighting.',
+          'Explain your brute-force logic immediately, track your variables clearly, and aim to arrive at an optimized solution by the 30-minute mark.'
+        ]
+      },
+      {
+        name: 'Onsite Coding Loops (3 Rounds)',
+        focus: 'Advanced Graphs, 2D Dynamic Programming, Tree Manipulations, Custom Object Design',
         duration: '45 mins each',
         tips: [
-          'Think out loud. Google interviewers evaluate your thought process heavily.',
-          'Start with a brute force answer, state its time/space complexity, and explain how you will optimize it.',
-          'Write clean, modular code with descriptive variable names.',
-          'Dry run your solution with a few edge cases (e.g. empty lists, negative inputs).'
+          'Think out loud. Google interviewers evaluate your meta-cognition and mathematical reasoning process heavily.',
+          'Expect highly unique or intentionally ambiguous prompts. You must ask clarifying questions before writing a single line of code.',
+          'Write clean, modular code with descriptive names, state its exact time/space complexity, and manually dry-run your solution with boundary values.'
         ]
       },
       {
         name: 'Googlyness & Leadership',
-        focus: 'Cultural fit, team collaboration, conflict resolution, ambiguous situations',
+        focus: 'Ambiguity navigation, ethical decision making, inclusion, conflict management',
         duration: '45 mins',
         tips: [
-          'Use the STAR method (Situation, Task, Action, Result) to format your answers.',
-          'Focus on collaborative success rather than solo accomplishments.',
-          'Show ownership, resilience, and an open-minded attitude to diverse ideas.'
+          'Structure every story around the STAR method (Situation, Task, Action, Result) to maintain concise responses.',
+          'Highlight a strong bias for action and how you navigate working with diverse ideas in teams.',
+          'Focus on collective, cross-functional success rather than singular personal credit.'
         ]
       }
     ],
     resources: [
-      { title: 'Google Tech Dev Guide', link: 'https://techdevguide.withgoogle.com/', type: 'Doc' },
+      { title: 'Google Tech Dev Guide Portal', link: 'https://techdevguide.withgoogle.com/', type: 'Doc' },
+      { title: 'LeetCode Top Google Questions Aggregator', link: 'https://leetcode.com/company/google/', type: 'Article' },
       { title: 'How to Solve Algorithmic Problems at Google', link: 'https://www.youtube.com/watch?v=XKu_SEDAykw', type: 'Video' },
-      { title: 'Google Interview Warmup', link: 'https://grow.google/certificates/interview-warmup/', type: 'Doc' }
+      { title: 'Google Interview Warmup Tool', link: 'https://grow.google/certificates/interview-warmup/', type: 'Doc' }
     ],
     faqs: [
-      { q: 'Is a resume matching score of 80%+ mandatory for Google?', a: 'While a high ATS score helps you clear initial resume screens, Google recruiters look for exceptional projects, competitive programming profiles, and strong GPA credentials.' },
-      { q: 'Does Google allow pseudocode in coding interviews?', a: 'No, you are expected to write syntactically correct, compiling, and well-designed code in your language of choice (C++, Java, Python, or Go).' }
+      { q: 'Is a resume matching score of 80%+ mandatory for Google?', a: 'While a solid resume layout clears automated tracking loops, recruiters prioritize core factors like complex personal/internship projects, open-source commits, competitive programming rankings, and solid academic metrics.' },
+      { q: 'Does Google allow pseudocode in coding interviews?', a: 'No. Pseudocode is penalized. You are strictly expected to complete clean, syntactically sound, and runnable solutions in your target programming language (C++, Java, Python, or Go).' },
+      { q: 'What is the function of the Hiring Committee (HC)?', a: 'Unlike standard operations where your interview panel decides your outcome, Google uses a blind Hiring Committee. Your interviewers compile objective notes, and this separate board reviews the entire packet to ensure fairness and consistency across teams.' }
     ]
   },
   {
