@@ -21,6 +21,7 @@ import {
 import { companyPreps } from '../data/companyData';
 import { CompanyPrepInfo } from '../data/companyData';
 import { CompanyPrepSkeleton } from "./SkeletonLoaders";
+import { recordRecentCompany } from '../use-cases/recent-companies';
 
 export default function CompanyPrep() {
   const [loading, setLoading] = useState(true);
@@ -92,8 +93,8 @@ export default function CompanyPrep() {
                     {company.rounds.length} Interview Rounds
                   </span>
                   
-                  <button 
-                    onClick={() => setSelectedCompany(company)}
+                  <button
+                    onClick={() => { recordRecentCompany(company); setSelectedCompany(company); }}
                     className="flex items-center gap-1 bg-slate-950 hover:bg-blue-600 text-xs font-bold text-slate-200 hover:text-white px-3.5 py-2 rounded-xl border border-slate-900 hover:border-blue-500 transition-all cursor-pointer"
                   >
                     View Guide
