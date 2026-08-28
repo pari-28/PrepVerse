@@ -1,6 +1,30 @@
 @import "tailwindcss";
 
+/* Enable complete configuration tracking on the wrapper element */
+@variant dark (&:where(.dark, .dark *));
+
 html, body {
   overflow-x: hidden;
   width: 100%;
+}
+
+@theme {
+  --color-background-light: #f8fafc;
+  --color-text-light: #0f172a;
+  
+  --color-background-dark: #020617;
+  --color-text-dark: #f8fafc;
+}
+
+/* Set default light styles */
+body {
+  background-color: var(--color-background-light);
+  color: var(--color-text-light);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* When the 'dark' class is present, switch colors */
+.dark body {
+  background-color: var(--color-background-dark);
+  color: var(--color-text-dark);
 }
