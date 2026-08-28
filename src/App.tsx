@@ -29,6 +29,7 @@ export default function App() {
     xp: 1250,
     streak: 6,
     solvedCount: 3,
+    targetCompany: 'xyz',
     dailyGoal: 3,
     completedToday: 1
   });
