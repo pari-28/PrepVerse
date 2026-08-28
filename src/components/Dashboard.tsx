@@ -5,23 +5,25 @@ import { DashboardSkeleton } from "./SkeletonLoaders";
  */
 
 import React, { useState } from 'react';
-import { 
-  Flame, 
-  Award, 
-  CheckCircle, 
-  Clock, 
-  Code, 
-  FileText, 
-  BrainCircuit, 
-  Sparkles, 
-  Plus, 
-  Play, 
-  TrendingUp, 
+import {
+  Flame,
+  Award,
+  CheckCircle,
+  Clock,
+  Code,
+  FileText,
+  BrainCircuit,
+  Sparkles,
+  Plus,
+  Play,
+  TrendingUp,
   Zap,
   Calendar,
-  ChevronRight
+  ChevronRight,
+  Building2
 } from 'lucide-react';
 import { UserStats } from '../types';
+import { getRecentCompanies, CompanyRecentView, recordRecentCompany } from '../use-cases/recent-companies';
 
 interface DashboardProps {
   userStats: UserStats;
@@ -40,6 +42,14 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
   ]);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskDay, setNewTaskDay] = useState('Monday');
+  // ponytail: recently viewed companies — hydrate once per mount.
+  const [recentCompanies, setRecentCompanies] = useState<CompanyRecentView[]>(() => getRecentCompanies());
+
+  const handleViewCompany = (company: CompanyRecentView) => {
+    recordRecentCompany(company);
+    setRecentCompanies(getRecentCompanies());
+    setCurrentTab('company');
+  };
 
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
@@ -346,6 +356,60 @@ export default function Dashboard({ userStats, setUserStats, setCurrentTab }: Da
 
         </div>
 
+      </div>
+
+      {/* RECENTLY VIEWED COMPANIES */}
+      <div className="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/40 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <Clock className="w-4 h-4 text-indigo-400" />
+            Recently Viewed Companies
+          </h3>
+          {recentCompanies.length > 0 && (
+            <button
+              onClick={() => setCurrentTab('company')}
+              className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-wider"
+            >
+              View all
+            </button>
+          )}
+        </div>
+
+        {recentCompanies.length === 0 ? (
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-8 text-center">
+            <Building2 className="mx-auto mb-3 h-8 w-8 text-slate-500" />
+            <h4 className="text-sm font-semibold text-white">No companies viewed yet</h4>
+            <p className="mt-1 text-xs text-slate-500">
+              Browse company preparation guides to see them listed here.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-3">
+            {recentCompanies.map((company) => (
+              <div
+                key={company.id}
+                onClick={() => handleViewCompany(company)}
+                className="p-4 rounded-2xl bg-slate-950/60 border border-slate-900 hover:border-slate-800/60 transition-all cursor-pointer flex items-center gap-3 group"
+              >
+                <img
+                  src={company.logo}
+                  alt={company.name}
+                  className="w-10 h-10 rounded-xl border border-slate-800 object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-slate-200 group-hover:text-blue-400 transition-colors truncate">
+                    {company.name}
+                  </p>
+                  <p className="text-[10px] text-slate-500">
+                    Viewed {Math.floor((Date.now() - company.viewedAt) / 1000 / 60)} minutes ago
+                  </p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors shrink-0" />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* RECENTLY SOLVED PROBLEM LOG */}
